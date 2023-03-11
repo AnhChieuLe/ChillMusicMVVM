@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="currentPlayer"
+            type="com.example.chillmusic.viewmodel.CurrentPlayerViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        tools:context=".activity.MainActivity"
+        android:background="@{currentPlayer.style.backgroundColor}">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/mini_player"
+            android:paddingHorizontal="8dp" />
+
+        <include
+            android:id="@+id/mini_player"
+            layout="@layout/mini_player"
+            android:layout_above="@id/bottom_navigation"
+            app:currentPlayer="@{currentPlayer}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp"
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/bottom_navigation_menu"
+            android:color="@{currentPlayer.style}" />
+
+    </RelativeLayout>
+</layout>

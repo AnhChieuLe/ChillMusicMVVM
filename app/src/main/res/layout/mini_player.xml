@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="currentPlayer"
+            type="com.example.chillmusic.viewmodel.CurrentPlayerViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/mini_player"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:transitionName="player"
+        android:padding="10dp"
+        android:visibility="@{currentPlayer.isActive ? View.VISIBLE : View.GONE}">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_album_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:transitionName="album_art"
+            android:layout_centerVertical="true"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="7dp">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/avatar"
+                android:bitmap="@{currentPlayer.song.smallImage}"
+                android:scaleType="centerCrop"
+                android:contentDescription="@{currentPlayer.song.title}" />
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:id="@+id/ln_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_toEndOf="@id/card_album_artist"
+            android:layout_toStartOf="@id/rln_controller"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:transitionName="title"
+                android:maxLines="1"
+                android:text="@{currentPlayer.song.title}"
+                android:textColor="@{currentPlayer.style.contentColor}"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_artist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:transitionName="album_art"
+                android:maxLines="1"
+                android:text='@{currentPlayer.song.artist.equals("") ? @string/unknown : currentPlayer.song.artist}'
+                android:textColor="@{currentPlayer.style.contentColor}"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rln_controller"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/img_previous"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:layout_margin="4dp"
+                android:src="@drawable/previous"
+                android:visibility="gone"
+                android:onClick="@{currentPlayer::previous}"
+                android:tint="@{currentPlayer.style.contentColor}" />
+
+            <CheckBox
+                android:id="@+id/img_play_or_pause"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="4dp"
+                android:button="@drawable/play_or_pause_24"
+                android:checked="@={currentPlayer.isPlaying}"
+                android:buttonTint="@{currentPlayer.style.contentColor}" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/img_next"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:layout_margin="4dp"
+                android:src="@drawable/next"
+                android:visibility="gone"
+                android:tint="@{currentPlayer.style.contentColor}"
+                android:onClick="@{currentPlayer::next}"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/img_clear"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:layout_margin="4dp"
+                android:src="@drawable/clear"
+                android:tint="@{currentPlayer.style.contentColor}"
+                android:onClick="@{currentPlayer::clear}"/>
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

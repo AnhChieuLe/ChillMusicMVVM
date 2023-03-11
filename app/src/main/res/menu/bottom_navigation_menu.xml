@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_songs"
+        android:icon="@drawable/music_note"
+        android:title="@string/song"/>
+
+    <item
+        android:id="@+id/nav_playlist"
+        android:icon="@drawable/playlist_fill"
+        android:title="@string/playlist"/>
+
+    <item
+        android:id="@+id/nav_setting"
+        android:icon="@drawable/setting"
+        android:title="@string/setting"/>
+</menu>
