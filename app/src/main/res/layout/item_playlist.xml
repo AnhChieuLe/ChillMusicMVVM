@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="currentPlayer"
+            type="com.example.chillmusic.object.CurrentPlayer" />
+        <variable
+            name="playlist"
+            type="com.example.chillmusic.database.PlayList" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="3dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@android:color/transparent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@{currentPlayer.style.itemBackGround}"
+            android:padding="16dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="@{playlist.name}"
+                android:textColor="@{currentPlayer.style.contentColor}"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/btn_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/delete"
+                android:layout_alignParentEnd="true"
+                android:tint="@{currentPlayer.style.contentColor}"/>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

@@ -7,7 +7,7 @@
         <import type="android.view.View"/>
         <variable
             name="currentPlayer"
-            type="com.example.chillmusic.viewmodel.CurrentPlayerViewModel" />
+            type="com.example.chillmusic.object.CurrentPlayer" />
     </data>
 
     <RelativeLayout
@@ -84,7 +84,7 @@
                 android:layout_margin="4dp"
                 android:src="@drawable/previous"
                 android:visibility="gone"
-                android:onClick="@{currentPlayer::previous}"
+                android:onClick="@{() -> currentPlayer.previous()}"
                 android:tint="@{currentPlayer.style.contentColor}" />
 
             <CheckBox
@@ -105,7 +105,7 @@
                 android:src="@drawable/next"
                 android:visibility="gone"
                 android:tint="@{currentPlayer.style.contentColor}"
-                android:onClick="@{currentPlayer::next}"/>
+                android:onClick="@{() -> currentPlayer.next()}"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/img_clear"
@@ -115,7 +115,7 @@
                 android:layout_margin="4dp"
                 android:src="@drawable/clear"
                 android:tint="@{currentPlayer.style.contentColor}"
-                android:onClick="@{currentPlayer::clear}"/>
+                android:onClick="@{() -> currentPlayer.clear()}"/>
         </LinearLayout>
     </RelativeLayout>
 </layout>

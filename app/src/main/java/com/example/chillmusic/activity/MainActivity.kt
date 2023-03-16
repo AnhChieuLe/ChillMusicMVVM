@@ -13,12 +13,12 @@ import com.example.chillmusic.R
 import com.example.chillmusic.adapter.MainViewPagerAdapter
 import com.example.chillmusic.contant.log
 import com.example.chillmusic.databinding.ActivityMainBinding
-import com.example.chillmusic.viewmodel.CurrentPlayerViewModel
+import com.example.chillmusic.`object`.CurrentPlayer
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: MainViewPagerAdapter
-    private val viewModel: CurrentPlayerViewModel by viewModels()
+    private val viewModel: CurrentPlayer by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,10 +37,10 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, MusicPlayerActivity::class.java)
             startActivity(intent)
         }
-        viewModel.song.observe(this){
-            window.navigationBarColor = viewModel.style.get()!!.backgroundColor
-            window.navigationBarDividerColor = viewModel.style.get()!!.backgroundColor
-            window.statusBarColor = viewModel.style.get()!!.backgroundColor
+        viewModel.liveStyle.observe(this){
+            window.navigationBarColor = it.backgroundColor
+            window.navigationBarDividerColor = it.backgroundColor
+            window.statusBarColor = it.backgroundColor
         }
     }
 

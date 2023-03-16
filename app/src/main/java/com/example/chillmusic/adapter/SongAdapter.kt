@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chillmusic.databinding.ItemSongBinding
 import com.example.chillmusic.model.Song
-import com.example.chillmusic.viewmodel.CurrentPlayerViewModel
+import com.example.chillmusic.`object`.CurrentPlayer
 
 class SongAdapter(
     private val songs: List<Song>,
-    private val currentPlayerViewModel: CurrentPlayerViewModel
+    private val currentPlayerViewModel: CurrentPlayer
 ) : RecyclerView.Adapter<SongAdapter.ViewHolder>(){
     var onItemClick: (Song) -> Unit = {}
 
@@ -18,7 +18,7 @@ class SongAdapter(
     }
 
     class ViewHolder(val binding: ItemSongBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bind(song: Song, currentPlayerViewModel: CurrentPlayerViewModel){
+        fun bind(song: Song, currentPlayerViewModel: CurrentPlayer){
             binding.songViewModel = song
             binding.currentPlayerViewModel = currentPlayerViewModel
         }

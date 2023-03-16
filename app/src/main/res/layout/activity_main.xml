@@ -6,7 +6,7 @@
         <import type="android.view.View"/>
         <variable
             name="currentPlayer"
-            type="com.example.chillmusic.viewmodel.CurrentPlayerViewModel" />
+            type="com.example.chillmusic.object.CurrentPlayer" />
     </data>
 
     <RelativeLayout

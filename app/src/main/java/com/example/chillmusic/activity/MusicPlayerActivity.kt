@@ -10,12 +10,9 @@ import com.example.chillmusic.databinding.ActivityMusicPlayerBinding
 import com.example.chillmusic.`object`.CurrentPlayer
 import com.example.chillmusic.service.ACTION_SEEK_TO
 import com.example.chillmusic.service.MusicPlayerService
-import com.example.chillmusic.viewmodel.CurrentPlayerViewModel
-import com.example.chillmusic.viewmodel.PlayListViewModel
 
 class MusicPlayerActivity : AppCompatActivity() {
-    private val currentPlayerViewModel: CurrentPlayerViewModel by viewModels()
-    private val playListViewModel: PlayListViewModel by viewModels()
+    private val currentPlayerViewModel: CurrentPlayer by viewModels()
     lateinit var binding: ActivityMusicPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,10 +54,16 @@ class MusicPlayerActivity : AppCompatActivity() {
     }
 
     private fun observer(){
-        CurrentPlayer.isActive.observe(this){
+        currentPlayerViewModel.isActive.observe(this){
             if(!it){
                 finish()
             }
+        }
+
+        currentPlayerViewModel.liveStyle.observe(this){
+            window.navigationBarColor = it.backgroundColor
+            window.navigationBarDividerColor = it.backgroundColor
+            window.statusBarColor = it.backgroundColor
         }
     }
 }

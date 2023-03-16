@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="style"
+            type="com.example.chillmusic.model.MusicStyle" />
+    </data>
+    <androidx.cardview.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@android:color/transparent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:background="@{style.itemBackGround}">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/add"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@{style.contentColor}"
+                android:text="@string/add_playlist"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/add"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:tint="@{style.contentColor}"
+                android:src="@drawable/add"/>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

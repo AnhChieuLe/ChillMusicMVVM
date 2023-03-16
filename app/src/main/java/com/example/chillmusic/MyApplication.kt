@@ -5,6 +5,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.media.MediaPlayer
 import android.util.Log
+import com.example.chillmusic.database.PlayList
+import com.example.chillmusic.database.PlayListRepository
 import com.example.chillmusic.`object`.CurrentPlayer
 
 const val CHANNEL_MEDIA_PLAYER = "CHANNEL_MEDIA_PLAYER"
@@ -12,6 +14,7 @@ const val CHANNEL_MEDIA_PLAYER = "CHANNEL_MEDIA_PLAYER"
 class MyApplication() : Application() {
     override fun onCreate() {
         super.onCreate()
+        //insertPlayList()
         createNotificationChanel()
     }
 

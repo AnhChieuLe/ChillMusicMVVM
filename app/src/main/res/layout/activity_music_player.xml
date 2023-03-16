@@ -8,7 +8,7 @@
         <import type="com.example.chillmusic.enums.Navigation"/>
         <variable
             name="currentPlayer"
-            type="com.example.chillmusic.viewmodel.CurrentPlayerViewModel" />
+            type="com.example.chillmusic.object.CurrentPlayer" />
     </data>
 
     <RelativeLayout
@@ -313,7 +313,7 @@
                 android:layout_marginHorizontal="16dp"
                 android:src="@{currentPlayer.navigation}"
                 android:tint="@{currentPlayer.style.contentColor}"
-                android:onClick="@{currentPlayer::changeNavigation}"
+                android:onClick="@{() -> currentPlayer.changeNavigation()}"
                 tools:ignore="ContentDescription" />
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -324,7 +324,7 @@
                 android:src="@drawable/previous"
                 tools:ignore="ContentDescription"
                 android:tint="@{currentPlayer.style.contentColor}"
-                android:onClick="@{currentPlayer::previous}"/>
+                android:onClick="@{() -> currentPlayer.previous()}"/>
 
             <CheckBox
                 android:id="@+id/img_play_or_pause"
@@ -343,7 +343,7 @@
                 android:src="@drawable/next"
                 tools:ignore="ContentDescription"
                 android:tint="@{currentPlayer.style.contentColor}"
-                android:onClick="@{currentPlayer::next}"/>
+                android:onClick="@{() -> currentPlayer.next()}"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="28dp"

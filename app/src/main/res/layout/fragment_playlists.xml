@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="currentPlayer"
+            type="com.example.chillmusic.object.CurrentPlayer" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="8dp"
+        android:background="@{currentPlayer.style.backgroundColor}">
+        <TextView
+            android:id="@+id/tv_your_playlists"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="@{currentPlayer.style.contentColor}"
+            android:text="Your playlists"
+            android:layout_marginVertical="24sp"/>
+
+        <include
+            android:id="@+id/item_add"
+            layout="@layout/item_playlist_add"
+            app:style="@{currentPlayer.style}"
+            android:layout_below="@id/tv_your_playlists"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcv_playlist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/item_add"
+            android:layout_marginTop="24dp"
+            tools:listitem="@layout/item_playlist"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+    </RelativeLayout>
+</layout>

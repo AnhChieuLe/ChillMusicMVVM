@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
 import com.example.chillmusic.R
 import com.example.chillmusic.model.Song
 import com.gun0912.tedpermission.PermissionListener
@@ -15,7 +14,7 @@ import com.gun0912.tedpermission.normal.TedPermission
 import java.io.File
 import kotlin.collections.ArrayList
 
-object ListSongManager {
+object SongsManager {
     var listSong = mutableListOf<Song>()
     fun setListAudio(context: Context) {
         val list: MutableList<Song> = ArrayList()
@@ -50,6 +49,8 @@ object ListSongManager {
         list.sortByDescending { it.date }
         listSong = list
     }
+
+    fun getSongs(vararg ids: Int) = listSong.filter { it.id in ids }
 
     private fun getSongWithMetadata(context: Context, id: Int, path: String): Song? {
         val meta = MediaMetadataRetriever()
