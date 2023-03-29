@@ -2,8 +2,6 @@
 
 Ứng dụng nghe nhạc offline
 
-Tìm lời bài hát
-
 Dynamic theme - theme thay đổi theo từng bài hát
 
 MVVM + LiveData + Databinding
