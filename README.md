@@ -6,6 +6,8 @@ Tìm lời bài hát
 
 Dynamic theme - theme thay đổi theo từng bài hát
 
+MVVM + LiveData + Databinding
+
 ## Danh sách nhạc
 
 Danh sách nhạc với được lấy từ file các file nhạc trong máy
