@@ -2,12 +2,14 @@ package com.example.chillmusic.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.selection.ItemDetailsLookup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.chillmusic.database.PlayList
+import com.example.chillmusic.model.PlayList
 import com.example.chillmusic.databinding.ItemPlaylistBinding
-import com.example.chillmusic.`object`.CurrentPlayer
+import com.example.chillmusic.viewmodel.CurrentPlayer
 
 class PlayListAdapter(
     private val viewModel: CurrentPlayer,
@@ -31,13 +33,6 @@ class PlayListAdapter(
         delete = listener
     }
 
-    class ViewHolder(val binding: ItemPlaylistBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bind(currentPlayer: CurrentPlayer, playList: PlayList){
-            binding.currentPlayer = currentPlayer
-            binding.playlist = playList
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemPlaylistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
@@ -55,8 +50,39 @@ class PlayListAdapter(
         }
     }
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
+    override fun getItemId(position: Int) = position.toLong()
+
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        holder.markAttach()
+    }
+
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.markDetach()
+    }
+
+    class ViewHolder(val binding: ItemPlaylistBinding) : RecyclerView.ViewHolder(binding.root), LifecycleOwner{
+        private val lifecycleRegistry = LifecycleRegistry(this)
+        override val lifecycle: Lifecycle get() = lifecycleRegistry
+
+        init {
+            lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
+        }
+
+        fun markAttach() {
+            lifecycleRegistry.currentState = Lifecycle.State.STARTED
+        }
+
+        fun markDetach() {
+            lifecycleRegistry.currentState = Lifecycle.State.CREATED
+        }
+
+        fun bind(currentPlayer: CurrentPlayer, playList: PlayList){
+            binding.currentPlayer = currentPlayer
+            binding.playlist = playList
+            binding.lifecycleOwner = this
+        }
     }
 
     class PlayListDiffCallback(
@@ -67,7 +93,7 @@ class PlayListAdapter(
         override fun getNewListSize() = newList.size
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldList[oldItemPosition].id == newList[newItemPosition].id
+            return oldList[oldItemPosition].name == newList[newItemPosition].name
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

@@ -2,11 +2,11 @@ package com.example.chillmusic.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.RecyclerView
+import com.example.chillmusic.contant.log
 import com.example.chillmusic.databinding.ItemSongSelectionBinding
 import com.example.chillmusic.model.Song
-import com.example.chillmusic.`object`.CurrentPlayer
+import com.example.chillmusic.viewmodel.CurrentPlayer
 
 class SelectionSongAdapter(
     private val songs : List<Song> = emptyList(),
@@ -14,7 +14,7 @@ class SelectionSongAdapter(
 ) : RecyclerView.Adapter<SelectionSongAdapter.ViewHolder>(){
     private val selectableSongs = songs.map { SelectableSong(it) }
 
-    fun getData(): List<Int>{
+    fun getData(): List<Long>{
         return selectableSongs.filter {
             it.selected
         }.map { it.song.id }

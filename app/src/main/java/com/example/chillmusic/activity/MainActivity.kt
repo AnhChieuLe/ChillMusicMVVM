@@ -1,23 +1,21 @@
 package com.example.chillmusic.activity
 
-import android.app.ActivityOptions
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
-import androidx.core.app.ActivityOptionsCompat
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager2.widget.ViewPager2
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.example.chillmusic.R
-import com.example.chillmusic.adapter.MainViewPagerAdapter
-import com.example.chillmusic.contant.log
 import com.example.chillmusic.databinding.ActivityMainBinding
-import com.example.chillmusic.`object`.CurrentPlayer
+import com.example.chillmusic.viewmodel.CurrentPlayer
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var adapter: MainViewPagerAdapter
     private val viewModel: CurrentPlayer by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,11 +23,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.currentPlayer = viewModel
         binding.lifecycleOwner = this
-        setViewPager()
-        bindViewPager()
+        binding.currentPlayer = viewModel
+        setBottomNav()
         setEvent()
+    }
+
+    private fun setBottomNav() {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_main_host) as NavHostFragment
+        binding.bottomNavigation.setupWithNavController(navHostFragment.navController)
     }
 
     private fun setEvent() {
@@ -37,37 +39,23 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, MusicPlayerActivity::class.java)
             startActivity(intent)
         }
-        viewModel.liveStyle.observe(this){
-            window.navigationBarColor = it.backgroundColor
-            window.navigationBarDividerColor = it.backgroundColor
-            window.statusBarColor = it.backgroundColor
-        }
-    }
-
-    private fun setViewPager(){
-        adapter = MainViewPagerAdapter(this)
-        binding.viewPager.adapter = adapter
-    }
-
-    private fun bindViewPager(){
-        binding.bottomNavigation.setOnItemSelectedListener {
-            when(it.itemId){
-                R.id.nav_songs -> binding.viewPager.currentItem = 0
-                R.id.nav_playlist -> binding.viewPager.currentItem = 1
-                R.id.nav_setting -> binding.viewPager.currentItem = 2
+        viewModel.style.observe(this) {
+            window.run {
+                navigationBarColor = it.backgroundColor
+                statusBarColor = it.backgroundColor
             }
-            true
         }
 
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                when(position){
-                    0 -> binding.bottomNavigation.menu.findItem(R.id.nav_songs).isChecked = true
-                    1 -> binding.bottomNavigation.menu.findItem(R.id.nav_playlist).isChecked = true
-                    2 -> binding.bottomNavigation.menu.findItem(R.id.nav_setting).isChecked = true
-                }
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_main_host) as NavHostFragment
+        val navController = navHostFragment.navController
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.fragmentSongsFromPlaylist, R.id.fragmentAddPlayList ->
+                    binding.bottomNavigation.visibility = View.GONE
+
+                else ->
+                    binding.bottomNavigation.visibility = View.VISIBLE
             }
-        })
+        }
     }
 }

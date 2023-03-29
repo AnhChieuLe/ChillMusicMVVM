@@ -1,0 +1,19 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="Trình phát nhạc">
+
+        <SwitchPreference
+            app:title="Tự động dừng"
+            app:summaryOn="Dừng phát nhạc khi có ứng dụng khác phát media"
+            app:summaryOff="Không dừng nhạc khi có ứng dụng khác phát media"
+            app:defaultValue="false"
+            app:key="auto_pause"/>
+        <SeekBarPreference
+            app:title="Âm lượng"
+            app:defaultValue="50"
+            app:showSeekBarValue="true"
+            app:summary="Tùy chỉnh âm lượng không ảnh hưởng tới âm lượng hệ thống"
+            app:key="volume"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

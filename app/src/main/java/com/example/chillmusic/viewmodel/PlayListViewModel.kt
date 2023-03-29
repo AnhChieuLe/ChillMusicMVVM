@@ -2,14 +2,11 @@ package com.example.chillmusic.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.example.chillmusic.database.PlayList
-import com.example.chillmusic.database.PlayListDataBase
-import com.example.chillmusic.database.PlayListRepository
-import com.example.chillmusic.enums.Navigation
-import com.example.chillmusic.model.Song
+import com.example.chillmusic.model.PlayList
+import com.example.chillmusic.data.playlist.PlayListDataBase
+import com.example.chillmusic.repository.PlayListRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 
 class PlayListViewModel(application: Application) : AndroidViewModel(application){
     private val repository: PlayListRepository
@@ -29,6 +26,12 @@ class PlayListViewModel(application: Application) : AndroidViewModel(application
     fun delete(playList: PlayList){
         viewModelScope.launch(Dispatchers.IO) {
             repository.delete(playList)
+        }
+    }
+
+    fun update(playList: PlayList){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.update(playList)
         }
     }
 }

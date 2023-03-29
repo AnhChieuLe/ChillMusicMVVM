@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="currentPlayer"
+            type="com.example.chillmusic.viewmodel.CurrentPlayer" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/seekbar_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/seekbar"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="16dp"
+            android:duration_text="@{currentPlayer.progress}"
+            android:textColor="@{currentPlayer.style.contentColor}"
+            android:textSize="12sp" />
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="@{currentPlayer.duration}"
+            android:maxHeight="4dp"
+            android:minHeight="2dp"
+            android:progress="@{currentPlayer.progress}"
+            android:progressDrawable="@drawable/custom_seekbar"
+            android:splitTrack="false"
+            android:style="@{currentPlayer.style}"
+            android:thumb="@drawable/seekbar_thumb"
+            android:layout_marginBottom="2dp"/>
+
+        <TextView
+            android:id="@+id/seekbar_max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/seekbar"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp"
+            android:duration_text="@{currentPlayer.duration}"
+            android:textColor="@{currentPlayer.style.contentColor}"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+</layout>

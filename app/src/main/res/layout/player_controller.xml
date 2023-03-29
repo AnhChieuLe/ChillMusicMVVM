@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="currentPlayer"
+            type="com.example.chillmusic.viewmodel.CurrentPlayer" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_navigation"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:padding="5dp"
+            android:layout_marginHorizontal="16dp"
+            android:src="@{currentPlayer.navigation}"
+            android:tint="@{currentPlayer.style.contentColor}"
+            android:onClick="@{() -> currentPlayer.changeNavigation()}"
+            tools:ignore="ContentDescription" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_previous"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginHorizontal="12dp"
+            android:src="@drawable/previous"
+            tools:ignore="ContentDescription"
+            android:tint="@{currentPlayer.style.contentColor}"
+            android:onClick="@{() -> currentPlayer.previous()}"/>
+
+        <CheckBox
+            android:id="@+id/img_play_or_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:button="@drawable/play_or_pause_48"
+            android:checked="@={currentPlayer.isPlaying}"
+            android:buttonTint="@{currentPlayer.style.contentColor}"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_next"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginHorizontal="12dp"
+            android:src="@drawable/next"
+            tools:ignore="ContentDescription"
+            android:tint="@{currentPlayer.style.contentColor}"
+            android:onClick="@{() -> currentPlayer.next()}"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:padding="5dp"
+            android:layout_marginHorizontal="18dp"
+            android:src="@drawable/favorite"
+            tools:ignore="ContentDescription"
+            android:tint="@{currentPlayer.style.contentColor}" />
+    </LinearLayout>
+</layout>

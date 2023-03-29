@@ -5,14 +5,13 @@
     <data>
         <variable
             name="currentPlayer"
-            type="com.example.chillmusic.object.CurrentPlayer" />
+            type="com.example.chillmusic.viewmodel.CurrentPlayer" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingHorizontal="8dp"
-        android:background="@{currentPlayer.style.backgroundColor}">
+        android:paddingHorizontal="8dp">
         <TextView
             android:id="@+id/tv_your_playlists"
             android:layout_width="wrap_content"

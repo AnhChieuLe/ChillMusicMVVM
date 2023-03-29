@@ -5,9 +5,9 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.*
 import android.media.AudioManager.OnAudioFocusChangeListener
-import android.media.session.MediaSession
 import android.os.IBinder
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
@@ -21,8 +21,9 @@ import com.example.chillmusic.R
 import com.example.chillmusic.activity.MusicPlayerActivity
 import com.example.chillmusic.contant.log
 import com.example.chillmusic.model.Song
-import com.example.chillmusic.`object`.CurrentPlayer
+import com.example.chillmusic.viewmodel.CurrentPlayer
 import com.example.chillmusic.receiver.MyReceiver
+import com.example.chillmusic.repository.SettingRepository
 import java.util.*
 
 
@@ -36,12 +37,10 @@ const val ACTION_SEEK_TO = 7
 
 class MusicPlayerService : Service() {
     private val mediaPlayer = MediaPlayer()
-    private val song: Song get() = CurrentPlayer.song.value!!
-    private val isPlaying get() = CurrentPlayer.isPlaying.value ?: false
-    private val volume get() = CurrentPlayer.volume.value?.div(100F) ?: 0F
-    private val image: Bitmap get() = song.smallImage
     private val timer = Timer()
-
+    private val settings by lazy { SettingRepository(application) }
+    private val song: Song get() = CurrentPlayer.song.value!!
+    private val imageDefault: Bitmap by lazy { BitmapFactory.decodeResource(resources, R.drawable.avatar) }
     private val mediaSessionCompat: MediaSessionCompat by lazy {
         MediaSessionCompat(this, "tag").apply {
             setCallback(mediaSessionCallback)
@@ -77,7 +76,7 @@ class MusicPlayerService : Service() {
     private val mediaMetadata
         get() = MediaMetadata.Builder().apply {
             putLong(MediaMetadata.METADATA_KEY_DURATION, /*song.duration.toLong()*/ -1L)
-            putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, song.smallImage)
+            putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, song.albumArt)
             putString(MediaMetadata.METADATA_KEY_TITLE, song.title)
             putString(MediaMetadata.METADATA_KEY_ARTIST, song.artist)
             putString(MediaMetadata.METADATA_KEY_ALBUM, song.album)
@@ -147,12 +146,12 @@ class MusicPlayerService : Service() {
         log(action)
     }
 
-    private fun startMusic() {
+    private fun startMediaPlayer() {
         mediaPlayer.reset()
-        mediaPlayer.setDataSource(applicationContext, song.contentUri)
+        mediaPlayer.setDataSource(applicationContext, song.uri)
         mediaPlayer.prepare()
         mediaPlayer.setOnPreparedListener {
-            it.startMusic()
+            it.startMediaPlayer()
             sendNotification()
             CurrentPlayer.duration.postValue(it.duration)
         }
@@ -168,13 +167,16 @@ class MusicPlayerService : Service() {
 
     private fun resumeMusic() {
         if (mediaPlayer.isPlaying) return
-        mediaPlayer.startMusic()
+        mediaPlayer.startMediaPlayer()
         sendNotification()
         log("Resume Music")
     }
 
-    private fun MediaPlayer.startMusic() {
-        audioFocusRequest = audioManager.requestAudioFocus(focusRequest)
+    private fun MediaPlayer.startMediaPlayer() {
+        if(settings.autoPause)
+            audioFocusRequest = audioManager.requestAudioFocus(focusRequest)
+        else
+            audioManager.abandonAudioFocusRequest(focusRequest)
         this.start()
     }
 
@@ -187,6 +189,7 @@ class MusicPlayerService : Service() {
     }
 
     private val observerVolume = Observer<Int> {
+        val volume = it.div(100F)
         mediaPlayer.setVolume(volume, volume)
     }
 
@@ -195,26 +198,20 @@ class MusicPlayerService : Service() {
         else pauseMusic()
     }
 
-    private val observerSong = Observer<Song> {
-        startMusic()
-    }
-
-    private val observerActive = Observer<Boolean> {
-        if (!it) stopSelf()
+    private val observerSong = Observer<Song?> {
+        it?.let { startMediaPlayer() } ?: stopSelf()
     }
 
     private fun registerLivedata() {
         CurrentPlayer.volume.observeForever(observerVolume)
         CurrentPlayer.isPlaying.observeForever(observerPlaying)
         CurrentPlayer.song.observeForever(observerSong)
-        CurrentPlayer.isActive.observeForever(observerActive)
     }
 
     private fun unRegisterLivedata() {
         CurrentPlayer.volume.removeObserver(observerVolume)
         CurrentPlayer.isPlaying.removeObserver(observerPlaying)
         CurrentPlayer.song.removeObserver(observerSong)
-        CurrentPlayer.isActive.removeObserver(observerActive)
     }
 
 
@@ -258,11 +255,11 @@ class MusicPlayerService : Service() {
             setSmallIcon(R.drawable.music_note)
             setContentTitle(song.title)
             setContentText(if (song.artist == "") getString(R.string.unknown) else song.artist)
-            setLargeIcon(image)
+            setLargeIcon(song.largeAlbumArt ?: imageDefault)
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             setContentIntent(pendingIntent)
             addAction(R.drawable.previous, "previous", getPendingIntent(ACTION_PREVIOUS))
-            if (isPlaying)
+            if (mediaPlayer.isPlaying)
                 addAction(R.drawable.pause, "pause", getPendingIntent(ACTION_PAUSE))
             else
                 addAction(R.drawable.play, "resume", getPendingIntent(ACTION_RESUME))

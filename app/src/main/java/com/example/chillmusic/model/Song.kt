@@ -1,17 +1,19 @@
 package com.example.chillmusic.model
 
+import android.content.ContentUris
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Parcelable
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
+import android.provider.MediaStore
 import kotlinx.parcelize.Parcelize
+import java.io.File
 
 @Parcelize
 data class Song(
-    var id: Int = 0,
-    var path: String = "",
-    var contentUri: Uri,
+    val id: Long = 0L,
+    val path: String = "",
     var title: String = "",
     var artist: String = "",
     var date: Long = 0,
@@ -19,19 +21,64 @@ data class Song(
     var genre: String = "",
     var album: String = "",
     var bitrate: Long = 0,
-    var smallImage: Bitmap,
+    var tracks: Int = 0,
+    var composer: String = "",
+    var writer: String = "",
+    var albumArt: Bitmap,
+    var size: Long = 0,
 ) : Parcelable{
-    companion object {
-        @BindingAdapter("android:bitmap")
-        @JvmStatic
-        fun setImage(view : ImageView, bitmap: Bitmap?){
-            bitmap?.let{
-                view.setImageBitmap(it)
-            }
+    val uri: Uri
+        get() {
+            val collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+            return ContentUris.withAppendedId(collection, id)
         }
-    }
+    val largeAlbumArt: Bitmap?
+        get() {
+            val metadata = MediaMetadataRetriever()
+            try{
+                metadata.setDataSource(path)
+            }catch (e: IllegalArgumentException){
+                e.printStackTrace()
+                return null
+            }
 
-    override fun equals(other: Any?): Boolean {
-        return (other as Song?)?.id == this.id
+            val byteArray = metadata.embeddedPicture ?: return null
+            return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+        }
+
+    fun extractMetaData() {
+        val metadata = MediaMetadataRetriever()
+        try {
+            metadata.setDataSource(path)
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+            return
+        }
+
+        val DURATION = MediaMetadataRetriever.METADATA_KEY_DURATION
+        val TITLE = MediaMetadataRetriever.METADATA_KEY_TITLE
+        val ALBUM = MediaMetadataRetriever.METADATA_KEY_ALBUM
+        val ARTIST = MediaMetadataRetriever.METADATA_KEY_ARTIST
+        val GENRE = MediaMetadataRetriever.METADATA_KEY_GENRE
+        val BITRATE = MediaMetadataRetriever.METADATA_KEY_BITRATE
+        val DATE = MediaMetadataRetriever.METADATA_KEY_DATE
+        val TRACKS = MediaMetadataRetriever.METADATA_KEY_NUM_TRACKS
+        val COMPOSER = MediaMetadataRetriever.METADATA_KEY_COMPOSER
+        val WRITER = MediaMetadataRetriever.METADATA_KEY_WRITER
+        val file = File(path)
+
+        duration = metadata.extractMetadata(DURATION)?.toInt() ?: 0
+        title = metadata.extractMetadata(TITLE).toString()
+        artist = metadata.extractMetadata(ARTIST).toString()
+        album = metadata.extractMetadata(ALBUM).toString()
+        genre = metadata.extractMetadata(GENRE).toString()
+        bitrate = metadata.extractMetadata(BITRATE)?.toLong() ?: 0L
+        date = file.lastModified()
+        size = file.length()
+        tracks = metadata.extractMetadata(TRACKS)?.toInt() ?: 0
+        composer = metadata.extractMetadata(COMPOSER).toString()
+        writer = metadata.extractMetadata(WRITER).toString()
     }
+    override fun equals(other: Any?) = (other as Song?)?.id == id
+    override fun hashCode() = id.hashCode()
 }

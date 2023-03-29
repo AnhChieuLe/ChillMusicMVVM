@@ -6,39 +6,50 @@
         <import type="android.view.View"/>
         <variable
             name="currentPlayer"
-            type="com.example.chillmusic.object.CurrentPlayer" />
+            type="com.example.chillmusic.viewmodel.CurrentPlayer" />
     </data>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         tools:context=".activity.MainActivity"
         android:background="@{currentPlayer.style.backgroundColor}">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/mini_player"
-            android:paddingHorizontal="8dp" />
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_main_host"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:paddingHorizontal="8dp"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toTopOf="@id/mini_player"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navGraph="@navigation/main_nav" />
 
         <include
             android:id="@+id/mini_player"
             layout="@layout/mini_player"
-            android:layout_above="@id/bottom_navigation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             app:currentPlayer="@{currentPlayer}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:elevation="0dp"
             android:layout_alignParentBottom="true"
-            app:menu="@menu/bottom_navigation_menu"
-            android:color="@{currentPlayer.style}" />
+            android:color="@{currentPlayer.style}"
+            app:elevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:menu="@menu/bottom_navigation_menu" />
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

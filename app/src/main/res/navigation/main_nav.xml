@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/fragmentSongs">
+
+    <fragment
+        android:id="@+id/fragmentSongs"
+        android:name="com.example.chillmusic.fragment.FragmentSongs"
+        android:label="FragmentSongs">
+        <argument
+            android:name="songs"
+            app:argType="integer[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentSongsFromPlaylist"
+        android:name="com.example.chillmusic.fragment.FragmentSongs"
+        android:label="FragmentSongs">
+        <argument
+            android:name="songs"
+            android:defaultValue="@null"
+            app:argType="long[]"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentPlaylists"
+        android:name="com.example.chillmusic.fragment.FragmentPlaylists"
+        android:label="FragmentPlaylists" >
+        <action
+            android:id="@+id/action_playList_to_addPlaylist"
+            app:destination="@id/fragmentAddPlayList" />
+        <action
+            android:id="@+id/action_playList_to_songs"
+            app:destination="@id/fragmentSongsFromPlaylist" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentSettings"
+        android:name="com.example.chillmusic.fragment.FragmentSettings"
+        android:label="FragmentSettings" />
+    <fragment
+        android:id="@+id/fragmentAddPlayList"
+        android:name="com.example.chillmusic.fragment.FragmentAddPlayList"
+        android:label="FragmentAddPlayList" />
+    <dialog
+        android:id="@+id/fragmentBottomMenu"
+        android:name="com.example.chillmusic.fragment.FragmentBottomMenu"
+        android:label="FragmentBottomMenu" >
+        <argument
+            android:name="id"
+            app:argType="long" />
+    </dialog>
+    <dialog
+        android:id="@+id/fragmentBottomPlayList"
+        android:name="com.example.chillmusic.fragment.FragmentBottomPlayList"
+        android:label="FragmentBottomPlayList" >
+        <argument
+            android:name="id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_fragmentBottomPlayList_to_fragmentAddPlayList"
+            app:destination="@id/fragmentAddPlayList" />
+    </dialog>
+    <dialog
+        android:id="@+id/fragmentDetail"
+        android:name="com.example.chillmusic.fragment.FragmentDetail"
+        android:label="FragmentDetail" >
+        <argument
+            android:name="id"
+            app:argType="long" />
+    </dialog>
+
+    <action
+        android:id="@+id/open_option_menu"
+        app:destination="@id/fragmentBottomMenu" />
+    <action
+        android:id="@+id/open_bottom_playlist"
+        app:destination="@id/fragmentBottomPlayList" />
+    <action
+        android:id="@+id/open_detail"
+        app:destination="@id/fragmentDetail" />
+</navigation>

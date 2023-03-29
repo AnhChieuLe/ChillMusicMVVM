@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="currentPlayer"
+            type="com.example.chillmusic.viewmodel.CurrentPlayer" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btn_back"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/back"
+            android:layout_centerVertical="true"
+            android:tint="@{currentPlayer.style.contentColor}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Playlist name"
+            android:layout_centerInParent="true"
+            android:textColor="@{currentPlayer.style.contentColor}"
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+    </RelativeLayout>
+</layout>

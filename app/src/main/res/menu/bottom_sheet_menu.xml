@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText">
+    <item
+        android:id="@+id/menu_play_next"
+        android:title="Phát tiếp theo"
+        android:icon="@drawable/queue"/>
+
+    <item
+        android:id="@+id/menu_add_to_wait_list"
+        android:title="Thêm vào hàng đợi"
+        android:icon="@drawable/playlist"/>
+
+    <item
+        android:id="@+id/menu_play_new"
+        android:title="Phát với danh sách mới"
+        android:icon="@drawable/playlist_add"/>
+
+    <item
+        android:id="@+id/menu_playlist_add"
+        android:title="Thêm vào danh sách phát"
+        android:icon="@drawable/playlist_add"/>
+
+    <item
+        android:id="@+id/menu_update_info"
+        android:title="Cập nhật thông tin"
+        android:icon="@drawable/update"/>
+
+    <item
+        android:id="@+id/menu_view_info"
+        android:title="Thông tin chi tiết"
+        android:icon="@drawable/info"/>
+
+    <item
+        android:id="@+id/menu_delete"
+        android:title="Xóa bài hát"
+        android:icon="@drawable/delete"/>
+
+</menu>

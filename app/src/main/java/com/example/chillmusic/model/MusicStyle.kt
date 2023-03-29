@@ -25,7 +25,9 @@ class MusicStyle() {
             return ColorStateList(states, colors)
         }
 
-    constructor(bitmap: Bitmap) : this() {
+    constructor(bitmap: Bitmap?) : this() {
+        if(bitmap == null)  return
+
         val palette = Palette.from(bitmap).clearFilters().generate()
         val swatch1 = palette.darkMutedSwatch ?: palette.mutedSwatch ?: palette.lightMutedSwatch ?: palette.dominantSwatch
 
@@ -54,7 +56,7 @@ class MusicStyle() {
             listAllColor.max()
     }
 
-    fun Int.getColorWithAlpha(alpha: Int): Int{
+    private fun Int.getColorWithAlpha(alpha: Int): Int{
         return Color.argb(alpha, Color.red(this), Color.green(this), Color.blue(this))
     }
 }

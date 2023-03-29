@@ -1,7 +1,6 @@
 package com.example.chillmusic.contant
 
 import android.util.Log
-import com.example.chillmusic.`object`.CurrentPlayer
 import com.example.chillmusic.service.*
 
 const val log_tag = "chill_music"

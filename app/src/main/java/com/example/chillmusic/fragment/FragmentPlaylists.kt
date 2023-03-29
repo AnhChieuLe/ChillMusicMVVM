@@ -1,19 +1,17 @@
 package com.example.chillmusic.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.chillmusic.R
 import com.example.chillmusic.adapter.PlayListAdapter
-import com.example.chillmusic.contant.log
-import com.example.chillmusic.database.PlayList
-import com.example.chillmusic.database.PlayListDataBase
-import com.example.chillmusic.database.PlayListRepository
 import com.example.chillmusic.databinding.FragmentPlaylistsBinding
-import com.example.chillmusic.`object`.CurrentPlayer
+import com.example.chillmusic.viewmodel.CurrentPlayer
 import com.example.chillmusic.viewmodel.PlayListViewModel
 
 class FragmentPlaylists : Fragment() {
@@ -26,9 +24,10 @@ class FragmentPlaylists : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = viewLifecycleOwner
         binding.currentPlayer = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
         setPlayList()
+        setEvent()
         return binding.root
     }
 
@@ -38,11 +37,19 @@ class FragmentPlaylists : Fragment() {
         }
         binding.rcvPlaylist.adapter = adapter
         adapter.setOnClickListener {
-            log(it.songs.size.toString())
+            val ids = it.songs.toLongArray()
+            val action = FragmentPlaylistsDirections.actionPlayListToSongs(ids)
+            findNavController().navigate(action)
         }
 
         adapter.setOnDeleteClickListener {
             playListViewModel.delete(it)
+        }
+    }
+
+    private fun setEvent(){
+        binding.itemAdd.root.setOnClickListener {
+            findNavController().navigate(R.id.action_playList_to_addPlaylist)
         }
     }
 }
