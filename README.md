@@ -6,6 +6,8 @@ Dynamic theme - theme thay đổi theo từng bài hát
 
 MVVM + LiveData + Databinding
 
+Rebuild from chill music MVC
+
 ## Danh sách nhạc
 
 Danh sách nhạc với được lấy từ file các file nhạc trong máy
