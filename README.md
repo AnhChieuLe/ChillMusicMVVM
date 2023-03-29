@@ -6,7 +6,7 @@ Dynamic theme - theme thay đổi theo từng bài hát
 
 MVVM + LiveData + Databinding
 
-Rebuild from chill music MVC
+Rebuild from [Chill Music MVC](https://github.com/AnhChieuLe/ChillMusic)
 
 ## Danh sách nhạc
 
