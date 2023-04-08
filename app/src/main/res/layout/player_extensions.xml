@@ -3,108 +3,104 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <import type="android.view.View" />
-
         <import type="com.example.chillmusic.enums.Navigation" />
-
         <variable
             name="currentPlayer"
             type="com.example.chillmusic.viewmodel.CurrentPlayer" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
+        android:id="@+id/extensions"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/info">
-
-        <TextView
-            android:id="@+id/volume_value"
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="@{@string/volume + currentPlayer.volume.toString()}"
-            android:textColor="@{currentPlayer.style.contentColor}"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:transitionName="extensions">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/volume_icon"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/volume"
-            android:tint="@{currentPlayer.style.contentColor}"
-            app:layout_constraintBottom_toBottomOf="@id/volume"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/volume" />
+            <TextView
+                android:id="@+id/volume_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="@{@string/volume + currentPlayer.volume.toString()}"
+                android:textColor="@{currentPlayer.style.contentColor}"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <SeekBar
-            android:id="@+id/volume"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:max="100"
-            android:maxHeight="4dp"
-            android:minHeight="4dp"
-            android:progress="@={currentPlayer.volume}"
-            android:progressDrawable="@drawable/custom_seekbar"
-            android:splitTrack="false"
-            android:style="@{currentPlayer.style}"
-            android:thumb="@drawable/seekbar_thumb_volume"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/volume_icon"
-            app:layout_constraintTop_toBottomOf="@id/volume_value" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/volume_icon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/volume"
+                android:tint="@{currentPlayer.style.contentColor}"
+                app:layout_constraintBottom_toBottomOf="@id/volume"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/volume" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/playlist"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/playlist"
-            android:tint="@{currentPlayer.style.contentColor}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/volume_icon" />
+            <SeekBar
+                android:id="@+id/volume"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:maxHeight="4dp"
+                android:minHeight="4dp"
+                android:progress="@={currentPlayer.volume}"
+                android:progressDrawable="@drawable/custom_seekbar"
+                android:splitTrack="false"
+                android:style="@{currentPlayer.style}"
+                android:thumb="@drawable/seekbar_thumb_volume"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/volume_icon"
+                app:layout_constraintTop_toBottomOf="@id/volume_value" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/playlist_add"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/playlist_add"
-            android:tint="@{currentPlayer.style.contentColor}"
-            app:layout_constraintEnd_toStartOf="@id/timer"
-            app:layout_constraintStart_toEndOf="@id/playlist"
-            app:layout_constraintTop_toBottomOf="@id/volume_icon" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/playlist"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/playlist"
+                android:tint="@{currentPlayer.style.contentColor}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/volume_icon" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/timer"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/timer"
-            android:tint="@{currentPlayer.style.contentColor}"
-            app:layout_constraintEnd_toStartOf="@id/share"
-            app:layout_constraintStart_toEndOf="@id/playlist_add"
-            app:layout_constraintTop_toBottomOf="@id/volume_icon" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/playlist_add"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/playlist_add"
+                android:tint="@{currentPlayer.style.contentColor}"
+                app:layout_constraintEnd_toStartOf="@id/timer"
+                app:layout_constraintStart_toEndOf="@id/playlist"
+                app:layout_constraintTop_toBottomOf="@id/volume_icon" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/share"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/share"
-            android:tint="@{currentPlayer.style.contentColor}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/volume_icon" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/timer"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/timer"
+                android:tint="@{currentPlayer.style.contentColor}"
+                app:layout_constraintEnd_toStartOf="@id/share"
+                app:layout_constraintStart_toEndOf="@id/playlist_add"
+                app:layout_constraintTop_toBottomOf="@id/volume_icon" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/share"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/share"
+                android:tint="@{currentPlayer.style.contentColor}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/volume_icon" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 </layout>

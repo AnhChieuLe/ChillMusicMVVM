@@ -1,11 +1,9 @@
-package com.example.chillmusic.repository
+package com.example.chillmusic.settings
 
 import android.app.Application
-import android.content.SharedPreferences
-import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 
-class SettingRepository(application: Application) {
+class Settings(application: Application) {
     private val defaultPreferences = PreferenceManager.getDefaultSharedPreferences(application)
 
     val autoPause: Boolean

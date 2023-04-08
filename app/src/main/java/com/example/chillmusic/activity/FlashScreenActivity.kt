@@ -8,7 +8,7 @@ import android.media.MediaScannerConnection
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
-import com.example.chillmusic.contant.log
+import com.example.chillmusic.constant.log
 import com.example.chillmusic.data.MediaStoreManager
 import com.example.chillmusic.model.Song
 import com.gun0912.tedpermission.PermissionListener

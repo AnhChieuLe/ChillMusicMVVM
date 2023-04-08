@@ -13,6 +13,7 @@ import com.example.chillmusic.enums.Navigation
 import com.example.chillmusic.model.MusicStyle
 import com.example.chillmusic.model.Song
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.tabs.TabLayout
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -20,17 +21,20 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 
 object CurrentPlayer : ViewModel() {
-    var playList = PlayList()
+    var playList = MutableLiveData(PlayList())
     val name = MutableLiveData("")
     var song = MutableLiveData<Song?>(null)
     val isPlaying = MutableLiveData(false)
-    val volume = MutableLiveData(50)
+    val volume = MutableLiveData(20)
     val progress = MutableLiveData(0)
     val duration = MutableLiveData(0)
     val navigation = MutableLiveData(Navigation.NORMAL)
     val isTouching = MutableLiveData(false)
     val style = song.mapWithDefault(MusicStyle()) {
         MusicStyle(it?.largeAlbumArt ?: it?.albumArt)
+    }
+    val isActive = song.map {
+        it != null
     }
 
     private fun LiveData<Song?>.mapWithDefault(defaultValue: MusicStyle, mapper: (Song?) -> MusicStyle): LiveData<MusicStyle> {
@@ -47,18 +51,18 @@ object CurrentPlayer : ViewModel() {
     }
 
     fun next() {
-        song.postValue(playList.getNext(song.value, navigation.value!!))
+        song.postValue(playList.value?.getNext(song.value, navigation.value!!))
     }
 
     fun previous() {
-        song.postValue(playList.previous(song.value, navigation.value!!))
+        song.postValue(playList.value?.previous(song.value, navigation.value!!))
     }
 
     fun pause() {
         isPlaying.postValue(false)
     }
 
-    fun resume() {
+    fun play() {
         isPlaying.postValue(true)
     }
 
@@ -67,15 +71,22 @@ object CurrentPlayer : ViewModel() {
     }
 
     fun addToNext(id: Long){
-        song.value?.let { playList.addToNext(it, id) }
+        if(!isActive.value!!) return
+        val customPlayList = playList.value
+        customPlayList?.addToNext(song.value!!, id)
+        playList.postValue(customPlayList)
     }
 
     fun addToLast(id: Long){
-        playList.addToLast(id)
+        if(!isActive.value!!) return
+        val customPlayList = playList.value
+        customPlayList?.addToLast(id)
+        playList.postValue(customPlayList)
     }
 
     fun newPlayList(id: Long){
-        playList.newPlayList(id)
+        val customPlayList = PlayList("Danh sách tùy chỉnh", mutableListOf(id))
+        playList.postValue(customPlayList)
     }
 
     fun changeNavigation() {
@@ -88,93 +99,5 @@ object CurrentPlayer : ViewModel() {
                 else -> Navigation.NORMAL
             }
         )
-    }
-
-    @BindingAdapter("android:color")
-    @JvmStatic
-    fun setColorStateList(view: BottomNavigationView, style: MusicStyle?) {
-        if (style == null) return
-        view.setBackgroundColor(style.backgroundColor)
-        view.itemIconTintList = style.stateList
-        view.itemTextColor = style.stateList
-    }
-
-    @BindingAdapter("android:text")
-    @JvmStatic
-    fun setText(textView: TextView, content: Int){
-        textView.text = content.toString()
-    }
-
-    @BindingAdapter("android:fileSize")
-    @JvmStatic
-    fun setFileSize(textView: TextView, content: Long){
-        val str = (content / 2.0.pow(20.0)).roundToInt().toString() + " MB"
-        textView.text = str
-    }
-
-    @BindingAdapter("android:bitrate")
-    @JvmStatic
-    fun setBitrate(textView: TextView, content: Long){
-        var str = (content / 1024).toString()
-        str += " kbps"
-        textView.text = str
-    }
-
-    @BindingAdapter("android:date")
-    @JvmStatic
-    fun setDate(textView: TextView, date: Long){
-        val simpleDateFormat = SimpleDateFormat("HH:mm - dd/MM/yyyy", Locale.getDefault())
-        textView.text = simpleDateFormat.format(Date(date))
-    }
-
-    @BindingAdapter("android:src")
-    @JvmStatic
-    fun setNavigationResource(view: ImageView, navigation: Navigation) {
-        view.setImageResource(
-            when (navigation) {
-                Navigation.NORMAL -> R.drawable.change
-                Navigation.REPEAT -> R.drawable.repeat
-                Navigation.REPEAT_ONE -> R.drawable.repeat_one
-                Navigation.RANDOM -> R.drawable.random
-            }
-        )
-    }
-
-    @BindingAdapter("android:duration_text")
-    @JvmStatic
-    fun setDurationText(view: TextView, duration: Int) {
-        view.text = getStringDuration(duration.toLong())
-    }
-
-    @BindingAdapter("android:bitmap")
-    @JvmStatic
-    fun setImage(view : ImageView, bitmap: Bitmap?){
-        bitmap?.let{
-            view.setImageBitmap(it)
-        } ?: view.setImageResource(R.drawable.avatar)
-    }
-
-    @BindingAdapter("android:style")
-    @JvmStatic
-    fun setSeekBarStyle(seekbar: SeekBar, style: MusicStyle) {
-        seekbar.progressDrawable.setTint(style.contentColor)
-        seekbar.thumb.setTint(style.contentColor)
-    }
-
-    @BindingAdapter("android:style")
-    @JvmStatic
-    fun setProgressBarStyle(progressBar: ProgressBar, style: MusicStyle?) {
-        style?.let { progressBar.progressDrawable.setTint(it.contentColor) }
-    }
-
-    private fun getStringDuration(millisecond: Long): String {
-        val hh = TimeUnit.MILLISECONDS.toHours(millisecond)
-        val mm = TimeUnit.MILLISECONDS.toMinutes(millisecond) % 60
-        val ss = TimeUnit.MILLISECONDS.toSeconds(millisecond) % 60
-
-        return if (hh > 0)
-            String.format("%02d:%02d:%02d", hh, mm, ss)
-        else
-            String.format("%02d:%02d", mm, ss)
     }
 }

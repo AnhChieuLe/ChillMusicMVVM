@@ -5,17 +5,26 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chillmusic.databinding.ItemSongBinding
 import com.example.chillmusic.model.Song
 import com.example.chillmusic.viewmodel.CurrentPlayer
 
 class SongAdapter(
-    private val songs: List<Song>,
     private val currentPlayerViewModel: CurrentPlayer
 ) : RecyclerView.Adapter<SongAdapter.ViewHolder>(){
     var onItemClick: (Song) -> Unit = {}
     var onOptionClick: (Song) -> Unit = {}
+
+    var songs: MutableList<Song> = mutableListOf()
+    set(value) {
+        val callback = SongDiffCallback(value, field)
+        val result = DiffUtil.calculateDiff(callback)
+        field.clear()
+        field.addAll(value)
+        result.dispatchUpdatesTo(this)
+    }
 
     fun setOnItemClickListener(onClick: (Song) -> Unit){
         this.onItemClick = onClick
@@ -23,29 +32,6 @@ class SongAdapter(
 
     fun setOnOptionClickListener(onClick: (Song) -> Unit){
         this.onOptionClick = onClick
-    }
-
-    class ViewHolder(val binding: ItemSongBinding) : RecyclerView.ViewHolder(binding.root), LifecycleOwner{
-        private val lifecycleRegistry = LifecycleRegistry(this)
-        override val lifecycle: Lifecycle get() = lifecycleRegistry
-
-        init {
-            lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
-        }
-
-        fun markAttach() {
-            lifecycleRegistry.currentState = Lifecycle.State.STARTED
-        }
-
-        fun markDetach() {
-            lifecycleRegistry.currentState = Lifecycle.State.CREATED
-        }
-
-        fun bind(song: Song, currentPlayerViewModel: CurrentPlayer){
-            binding.songViewModel = song
-            binding.currentPlayerViewModel = currentPlayerViewModel
-            binding.lifecycleOwner = this
-        }
     }
 
     override fun onViewAttachedToWindow(holder: ViewHolder) {
@@ -78,6 +64,46 @@ class SongAdapter(
         holder.binding.root.setOnLongClickListener {
             onOptionClick(song)
             true
+        }
+    }
+
+    class ViewHolder(val binding: ItemSongBinding) : RecyclerView.ViewHolder(binding.root), LifecycleOwner{
+        private val lifecycleRegistry = LifecycleRegistry(this)
+        override val lifecycle: Lifecycle get() = lifecycleRegistry
+
+        init {
+            lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
+        }
+
+        fun markAttach() {
+            lifecycleRegistry.currentState = Lifecycle.State.STARTED
+        }
+
+        fun markDetach() {
+            lifecycleRegistry.currentState = Lifecycle.State.CREATED
+        }
+
+        fun bind(song: Song, currentPlayerViewModel: CurrentPlayer){
+            binding.songViewModel = song
+            binding.currentPlayerViewModel = currentPlayerViewModel
+            binding.lifecycleOwner = this
+        }
+    }
+
+    class SongDiffCallback(
+        private val newList : List<Song>,
+        private val oldList : List<Song>
+    ) : DiffUtil.Callback(){
+        override fun getOldListSize() = oldList.size
+
+        override fun getNewListSize() = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].id == newList[newItemPosition].id
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].id == newList[newItemPosition].id
         }
     }
 }

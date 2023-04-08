@@ -7,9 +7,12 @@ import com.example.chillmusic.service.MusicPlayerService
 
 class MyReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, it: Intent?) {
-        val action = it?.getIntExtra("action", 0) ?: 0
+        it ?: return
+        context ?: return
+
+        val action = it.getIntExtra("action", 0)
         val intent = Intent(context, MusicPlayerService::class.java)
         intent.putExtra("action", action)
-        context?.startService(intent)
+        context.startService(intent)
     }
 }

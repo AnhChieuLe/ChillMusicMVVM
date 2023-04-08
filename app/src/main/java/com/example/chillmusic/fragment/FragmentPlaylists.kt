@@ -49,7 +49,7 @@ class FragmentPlaylists : Fragment() {
 
     private fun setEvent(){
         binding.itemAdd.root.setOnClickListener {
-            findNavController().navigate(R.id.action_playList_to_addPlaylist)
+            findNavController().navigate(R.id.open_playlist_add)
         }
     }
 }

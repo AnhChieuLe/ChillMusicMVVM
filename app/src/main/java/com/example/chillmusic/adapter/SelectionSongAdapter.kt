@@ -3,7 +3,6 @@ package com.example.chillmusic.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.chillmusic.contant.log
 import com.example.chillmusic.databinding.ItemSongSelectionBinding
 import com.example.chillmusic.model.Song
 import com.example.chillmusic.viewmodel.CurrentPlayer

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="com.example.chillmusic.model.Song" />
+
+        <variable
+            name="currentPlayer"
+            type="com.example.chillmusic.viewmodel.CurrentPlayer" />
+    </data>
+
+    <com.example.chillmusic.library.PlayerScreenMotionLayout
+        android:id="@+id/main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        app:layoutDescription="@xml/main_motion_player_scene">
+
+        <FrameLayout
+            android:id="@id/container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@{currentPlayer.style.backgroundColor}"/>
+
+        <FrameLayout
+            android:id="@+id/image_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:max="@{currentPlayer.duration}"
+            android:progress="@{currentPlayer.progress}"
+            android:style="@{currentPlayer.style}" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/album_art"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:bitmap="@{currentPlayer.song.largeAlbumArt}"
+            android:contentDescription="@{currentPlayer.song.title}"
+            android:scaleType="centerCrop"
+            android:src="@drawable/avatar"
+            app:shapeAppearanceOverlay="@style/roundedLargeImageView" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="@{currentPlayer.song.title}"
+            android:textColor="@{currentPlayer.style.contentColor}"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_artist"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="@{currentPlayer.song.artist}"
+            android:textColor="@{currentPlayer.style.contentColor}"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <CheckBox
+            android:id="@+id/img_play_or_pause"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:button="@drawable/play_or_pause_24"
+            android:buttonTint="@{currentPlayer.style.contentColor}"
+            android:checked="@={currentPlayer.isPlaying}" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_clear"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:onClick="@{() -> currentPlayer.clear()}"
+            android:src="@drawable/clear"
+            android:tint="@{currentPlayer.style.contentColor}" />
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/player_toolbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:currentPlayer="@{currentPlayer}"/>
+
+        <include
+            android:id="@+id/seekbar"
+            layout="@layout/player_seekbar"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            app:currentPlayer="@{currentPlayer}" />
+
+        <include
+            android:id="@id/extensions"
+            layout="@layout/player_extensions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:currentPlayer="@{currentPlayer}" />
+
+        <include
+            android:id="@+id/controller"
+            layout="@layout/player_controller"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            app:currentPlayer="@{currentPlayer}" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fragment_playlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </com.example.chillmusic.library.PlayerScreenMotionLayout>
+</layout>

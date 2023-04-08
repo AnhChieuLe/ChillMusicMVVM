@@ -12,33 +12,34 @@ import android.os.IBinder
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.Observer
 import androidx.media.app.NotificationCompat.MediaStyle
 import androidx.media.session.MediaButtonReceiver
 import com.example.chillmusic.CHANNEL_MEDIA_PLAYER
 import com.example.chillmusic.R
-import com.example.chillmusic.activity.MusicPlayerActivity
-import com.example.chillmusic.contant.log
+import com.example.chillmusic.activity.MainActivity
+import com.example.chillmusic.constant.log
 import com.example.chillmusic.model.Song
-import com.example.chillmusic.viewmodel.CurrentPlayer
 import com.example.chillmusic.receiver.MyReceiver
-import com.example.chillmusic.repository.SettingRepository
+import com.example.chillmusic.settings.Settings
+import com.example.chillmusic.viewmodel.CurrentPlayer
 import java.util.*
 
 
 const val ACTION_PAUSE = 1
-const val ACTION_RESUME = 2
+const val ACTION_PLAY = 2
 const val ACTION_CLEAR = 3
-const val ACTION_NEXT = 4
-const val ACTION_PREVIOUS = 5
+const val ACTION_SKIP_TO_NEXT = 4
+const val ACTION_SKIP_TO_PREVIOUS = 5
 const val ACTION_START = 6
 const val ACTION_SEEK_TO = 7
 
 class MusicPlayerService : Service() {
     private val mediaPlayer = MediaPlayer()
     private val timer = Timer()
-    private val settings by lazy { SettingRepository(application) }
+    private val settings by lazy { Settings(application) }
     private val song: Song get() = CurrentPlayer.song.value!!
     private val imageDefault: Bitmap by lazy { BitmapFactory.decodeResource(resources, R.drawable.avatar) }
     private val mediaSessionCompat: MediaSessionCompat by lazy {
@@ -49,12 +50,19 @@ class MusicPlayerService : Service() {
     private val mediaSessionCallback = object : MediaSessionCompat.Callback() {
         override fun onPause() {
             super.onPause()
-            handleAction(ACTION_PAUSE)
+            CurrentPlayer.pause()
         }
 
         override fun onPlay() {
             super.onPlay()
-            handleAction(ACTION_RESUME)
+            CurrentPlayer.play()
+            mediaSessionCompat.isActive = true
+        }
+
+        override fun onStop() {
+            super.onStop()
+            CurrentPlayer.clear()
+            mediaSessionCompat.isActive = false
         }
 
         override fun onSeekTo(pos: Long) {
@@ -64,12 +72,12 @@ class MusicPlayerService : Service() {
 
         override fun onSkipToNext() {
             super.onSkipToNext()
-            handleAction(ACTION_NEXT)
+            CurrentPlayer.next()
         }
 
         override fun onSkipToPrevious() {
             super.onSkipToPrevious()
-            handleAction(ACTION_PREVIOUS)
+            CurrentPlayer.previous()
         }
     }
 
@@ -88,13 +96,12 @@ class MusicPlayerService : Service() {
     private var audioFocusRequest: Int = 0
 
     private val audioFocusChangeListener = OnAudioFocusChangeListener { focusChange ->
-        log("Focus: $focusChange")
         val action = when (focusChange) {
-            AudioManager.AUDIOFOCUS_GAIN -> ACTION_RESUME
+            AudioManager.AUDIOFOCUS_GAIN -> ACTION_PLAY
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> ACTION_PAUSE
             AudioManager.AUDIOFOCUS_LOSS -> ACTION_PAUSE
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> ACTION_PAUSE
-            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE -> ACTION_RESUME
+            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE -> ACTION_PLAY
             else -> -10
         }
         handleAction(action)
@@ -104,9 +111,8 @@ class MusicPlayerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        log("onCreate")
         mediaPlayer.setOnCompletionListener { CurrentPlayer.next() }
-        audioManager = (getSystemService(Context.AUDIO_SERVICE) as? AudioManager)!!
+        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioAttributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_MEDIA)
             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -122,28 +128,30 @@ class MusicPlayerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        intent ?: return START_NOT_STICKY
         log("onStartCommand")
-        val action = intent?.getIntExtra("action", 0) ?: 0
-        if (action == ACTION_SEEK_TO) {
-            val progress = intent?.getIntExtra("progress", 0) ?: 0
+
+        val action = intent.getIntExtra("action", 0)
+        if(action == ACTION_SEEK_TO){
+            val progress = intent.getIntExtra("progress", 0)
             mediaPlayer.seekTo(progress)
         }
-        handleAction(action)
 
+        handleAction(action)
         MediaButtonReceiver.handleIntent(mediaSessionCompat, intent)
+
         return START_NOT_STICKY
     }
 
     private fun handleAction(action: Int) {
         when (action) {
             ACTION_PAUSE -> CurrentPlayer.pause()
-            ACTION_RESUME -> CurrentPlayer.resume()
+            ACTION_PLAY -> CurrentPlayer.play()
             ACTION_CLEAR -> CurrentPlayer.clear()
-            ACTION_PREVIOUS -> CurrentPlayer.previous()
-            ACTION_NEXT -> CurrentPlayer.next()
+            ACTION_SKIP_TO_PREVIOUS -> CurrentPlayer.previous()
+            ACTION_SKIP_TO_NEXT -> CurrentPlayer.next()
             ACTION_START -> CurrentPlayer.start()
         }
-        log(action)
     }
 
     private fun startMediaPlayer() {
@@ -155,21 +163,18 @@ class MusicPlayerService : Service() {
             sendNotification()
             CurrentPlayer.duration.postValue(it.duration)
         }
-        log("Start music")
     }
 
     private fun pauseMusic() {
         if (!mediaPlayer.isPlaying) return
         mediaPlayer.pause()
         sendNotification()
-        log("Pause Music")
     }
 
-    private fun resumeMusic() {
+    private fun playMusic() {
         if (mediaPlayer.isPlaying) return
         mediaPlayer.startMediaPlayer()
         sendNotification()
-        log("Resume Music")
     }
 
     private fun MediaPlayer.startMediaPlayer() {
@@ -194,7 +199,7 @@ class MusicPlayerService : Service() {
     }
 
     private val observerPlaying = Observer<Boolean> {
-        if (it) resumeMusic()
+        if (it) playMusic()
         else pauseMusic()
     }
 
@@ -214,7 +219,6 @@ class MusicPlayerService : Service() {
         CurrentPlayer.song.removeObserver(observerSong)
     }
 
-
     private fun Timer.start() {
         val task = object : TimerTask() {
             override fun run() {
@@ -226,24 +230,25 @@ class MusicPlayerService : Service() {
     }
 
     private fun sendNotification() {
-        val intent = Intent(this, MusicPlayerActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
+        intent.action = MainActivity.ACTION_EXPAND
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val playbackState = PlaybackStateCompat.Builder().apply {
             setState(PlaybackStateCompat.STATE_PLAYING, mediaPlayer.currentPosition.toLong(), 1F)
             setActions(
-                PlaybackStateCompat.ACTION_SEEK_TO
-                        or PlaybackStateCompat.ACTION_SKIP_TO_NEXT
-                        or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
-                        or PlaybackStateCompat.ACTION_PAUSE
-                        or PlaybackStateCompat.ACTION_PLAY
-                        or PlaybackStateCompat.ACTION_PLAY_PAUSE
+                   PlaybackStateCompat.ACTION_SEEK_TO
+                or PlaybackStateCompat.ACTION_SKIP_TO_NEXT
+                or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
+                or PlaybackStateCompat.ACTION_PAUSE
+                or PlaybackStateCompat.ACTION_PLAY
+                or PlaybackStateCompat.ACTION_PLAY_PAUSE
+                or PlaybackStateCompat.ACTION_STOP
             )
         }.build()
 
         mediaSessionCompat.apply {
             setMetadata(MediaMetadataCompat.fromMediaMetadata(mediaMetadata))
-            isActive = true
             setPlaybackState(playbackState)
         }
 
@@ -258,12 +263,12 @@ class MusicPlayerService : Service() {
             setLargeIcon(song.largeAlbumArt ?: imageDefault)
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             setContentIntent(pendingIntent)
-            addAction(R.drawable.previous, "previous", getPendingIntent(ACTION_PREVIOUS))
+            addAction(R.drawable.previous, "previous", getPendingIntent(ACTION_SKIP_TO_PREVIOUS))
             if (mediaPlayer.isPlaying)
                 addAction(R.drawable.pause, "pause", getPendingIntent(ACTION_PAUSE))
             else
-                addAction(R.drawable.play, "resume", getPendingIntent(ACTION_RESUME))
-            addAction(R.drawable.next, "next", getPendingIntent(ACTION_NEXT))
+                addAction(R.drawable.play, "resume", getPendingIntent(ACTION_PLAY))
+            addAction(R.drawable.next, "next", getPendingIntent(ACTION_SKIP_TO_NEXT))
             addAction(R.drawable.clear, "clear", getPendingIntent(ACTION_CLEAR))
             setStyle(style)
         }.build()
@@ -273,7 +278,9 @@ class MusicPlayerService : Service() {
 
     //Service -> Broadcast -> Service
     private fun getPendingIntent(action: Int): PendingIntent {
-        val intent = Intent(this, MyReceiver::class.java).apply { putExtra("action", action) }
+        val intent = Intent(this, MyReceiver::class.java).apply {
+            putExtra("action", action)
+        }
         return PendingIntent.getBroadcast(
             applicationContext,
             action,

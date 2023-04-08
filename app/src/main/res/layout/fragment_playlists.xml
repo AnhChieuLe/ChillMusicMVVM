@@ -12,21 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingHorizontal="8dp">
-        <TextView
-            android:id="@+id/tv_your_playlists"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            android:textColor="@{currentPlayer.style.contentColor}"
-            android:text="Your playlists"
-            android:layout_marginVertical="24sp"/>
-
         <include
             android:id="@+id/item_add"
             layout="@layout/item_playlist_add"
             app:style="@{currentPlayer.style}"
-            android:layout_below="@id/tv_your_playlists"
+            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

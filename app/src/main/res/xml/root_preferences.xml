@@ -3,17 +3,16 @@
     <PreferenceCategory app:title="Trình phát nhạc">
 
         <SwitchPreference
-            app:title="Tự động dừng"
-            app:summaryOn="Dừng phát nhạc khi có ứng dụng khác phát media"
-            app:summaryOff="Không dừng nhạc khi có ứng dụng khác phát media"
             app:defaultValue="false"
-            app:key="auto_pause"/>
+            app:key="auto_pause"
+            app:summaryOff="Không dừng nhạc khi có ứng dụng khác phát media"
+            app:summaryOn="Dừng phát nhạc khi có ứng dụng khác phát media"
+            app:title="Tự động dừng" />
         <SeekBarPreference
-            app:title="Âm lượng"
             app:defaultValue="50"
+            app:key="volume"
             app:showSeekBarValue="true"
             app:summary="Tùy chỉnh âm lượng không ảnh hưởng tới âm lượng hệ thống"
-            app:key="volume"/>
+            app:title="Âm lượng" />
     </PreferenceCategory>
-
 </PreferenceScreen>

@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/fragmentSongs"
+        android:id="@+id/fragmentListSongs"
         android:icon="@drawable/music_note"
         android:title="@string/song"/>
 

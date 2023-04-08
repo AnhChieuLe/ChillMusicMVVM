@@ -2,17 +2,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_nav"
-    app:startDestination="@id/fragmentSongs">
+    app:startDestination="@id/fragmentListSongs">
 
     <fragment
-        android:id="@+id/fragmentSongs"
-        android:name="com.example.chillmusic.fragment.FragmentSongs"
+        android:id="@+id/fragmentListSongs"
+        android:name="com.example.chillmusic.fragment.FragmentListSong"
         android:label="FragmentSongs">
-        <argument
-            android:name="songs"
-            app:argType="integer[]"
-            app:nullable="true"
-            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/fragmentSongsFromPlaylist"
@@ -28,9 +23,6 @@
         android:id="@+id/fragmentPlaylists"
         android:name="com.example.chillmusic.fragment.FragmentPlaylists"
         android:label="FragmentPlaylists" >
-        <action
-            android:id="@+id/action_playList_to_addPlaylist"
-            app:destination="@id/fragmentAddPlayList" />
         <action
             android:id="@+id/action_playList_to_songs"
             app:destination="@id/fragmentSongsFromPlaylist" />
@@ -58,9 +50,6 @@
         <argument
             android:name="id"
             app:argType="long" />
-        <action
-            android:id="@+id/action_fragmentBottomPlayList_to_fragmentAddPlayList"
-            app:destination="@id/fragmentAddPlayList" />
     </dialog>
     <dialog
         android:id="@+id/fragmentDetail"
@@ -80,4 +69,7 @@
     <action
         android:id="@+id/open_detail"
         app:destination="@id/fragmentDetail" />
+    <action
+        android:id="@+id/open_playlist_add"
+        app:destination="@id/fragmentAddPlayList" />
 </navigation>

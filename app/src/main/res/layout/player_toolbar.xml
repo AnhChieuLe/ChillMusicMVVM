@@ -9,7 +9,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="?attr/actionBarSize"
+        android:transitionName="toolbar">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/btn_back"
@@ -22,11 +23,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Playlist name"
+            android:text="@{currentPlayer.playList.name}"
             android:layout_centerInParent="true"
             android:textColor="@{currentPlayer.style.contentColor}"
             android:layout_gravity="center"
             android:textSize="18sp"
             android:textStyle="bold"/>
+
     </RelativeLayout>
 </layout>

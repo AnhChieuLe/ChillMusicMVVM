@@ -36,7 +36,7 @@ class FragmentDetail : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.FloatingDialog)
+        setStyle(STYLE_NO_TITLE, R.style.FloatingDialog)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

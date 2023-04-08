@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.chillmusic.adapter.SelectionSongAdapter
-import com.example.chillmusic.contant.log
 import com.example.chillmusic.data.MediaStoreManager
 import com.example.chillmusic.model.PlayList
 import com.example.chillmusic.databinding.FragmentNewPlaylistBinding

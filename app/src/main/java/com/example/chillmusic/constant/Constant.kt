@@ -1,21 +1,21 @@
-package com.example.chillmusic.contant
+package com.example.chillmusic.constant
 
 import android.util.Log
 import com.example.chillmusic.service.*
 
 const val log_tag = "chill_music"
 
-fun log(info: String){
-    Log.d(log_tag, info)
+fun log(info: String?){
+    Log.d(log_tag, info ?: "")
 }
 
 fun log(action: Int){
     val strAction = when (action) {
         ACTION_PAUSE    ->  "ACTION_PAUSE"
-        ACTION_RESUME   ->  "ACTION_RESUME"
+        ACTION_PLAY   ->  "ACTION_RESUME"
         ACTION_CLEAR    ->  "ACTION_CLEAR"
-        ACTION_PREVIOUS ->  "ACTION_PREVIOUS"
-        ACTION_NEXT     ->  "ACTION_NEXT"
+        ACTION_SKIP_TO_PREVIOUS ->  "ACTION_PREVIOUS"
+        ACTION_SKIP_TO_NEXT     ->  "ACTION_NEXT"
         ACTION_START    ->  "ACTION_START"
         else -> "Con cac"
     }

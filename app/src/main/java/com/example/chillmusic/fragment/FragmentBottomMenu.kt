@@ -57,18 +57,11 @@ class FragmentBottomMenu : BottomSheetDialogFragment() {
     private fun handleAction(){
         val id = args.id
         binding.bottomMenu.setNavigationItemSelectedListener {
-            //findNavController().popBackStack()
-            dismiss()
+            findNavController().popBackStack()
             when(it.itemId){
                 R.id.menu_play_next -> viewModel.addToNext(id)
                 R.id.menu_add_to_wait_list -> viewModel.addToLast(id)
-                R.id.menu_play_new -> {
-                    viewModel.newPlayList(id)
-                    viewModel.song.postValue(MediaStoreManager.getSongs(id)[0])
-                    val intent = Intent(requireContext(), MusicPlayerService::class.java)
-                    intent.putExtra("action", ACTION_START)
-                    activity?.startService(intent)
-                }
+                R.id.menu_play_new -> playNew(id)
                 R.id.menu_playlist_add -> addToPlayList(id)
                 R.id.menu_view_info -> showInfo(id)
                 R.id.menu_update_info -> {}
@@ -78,22 +71,21 @@ class FragmentBottomMenu : BottomSheetDialogFragment() {
         }
     }
 
+    private fun playNew(id: Long){
+        viewModel.newPlayList(id)
+        viewModel.song.postValue(MediaStoreManager.getSongs(id)[0])
+        val intent = Intent(requireContext(), MusicPlayerService::class.java)
+        activity?.startService(intent)
+    }
+
     private fun addToPlayList(id: Long){
-//        val action = MainNavDirections.openBottomPlaylist(id)
-//        findNavController().navigate(action)
-        activity?.let {
-            val dialog = FragmentBottomPlayList.newInstance(id)
-            dialog.show(it.supportFragmentManager, "Playlist")
-        }
+        val action = MainNavDirections.openBottomPlaylist(id)
+        findNavController().navigate(action)
     }
 
     private fun showInfo(id: Long){
-//        val action = MainNavDirections.openDetail(id)
-//        findNavController().navigate(action)
-        activity?.let {
-            val dialog = FragmentDetail.newInstance(id)
-            dialog.show(it.supportFragmentManager, "Detail")
-        }
+        val action = MainNavDirections.openDetail(id)
+        findNavController().navigate(action)
     }
 
     private fun delete(id: Long){

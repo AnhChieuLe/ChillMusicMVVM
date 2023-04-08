@@ -33,11 +33,6 @@ data class PlayList(
         songs.add(id)
     }
 
-    fun newPlayList(id: Long){
-        songs.clear()
-        songs.add(id)
-    }
-
     fun getNext(song: Song?, navigation: Navigation) : Song?{
         val list = MediaStoreManager.getSongs(*songs.toLongArray())
         val currentPosition = list.indexOf(song)
