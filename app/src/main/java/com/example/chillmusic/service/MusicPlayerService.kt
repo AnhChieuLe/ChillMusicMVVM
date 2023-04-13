@@ -84,7 +84,7 @@ class MusicPlayerService : Service() {
     private val mediaMetadata
         get() = MediaMetadata.Builder().apply {
             putLong(MediaMetadata.METADATA_KEY_DURATION, /*song.duration.toLong()*/ -1L)
-            putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, song.albumArt)
+            putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, song.liveAlbumArt.value)
             putString(MediaMetadata.METADATA_KEY_TITLE, song.title)
             putString(MediaMetadata.METADATA_KEY_ARTIST, song.artist)
             putString(MediaMetadata.METADATA_KEY_ALBUM, song.album)

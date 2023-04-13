@@ -23,9 +23,6 @@
         android:id="@+id/fragmentPlaylists"
         android:name="com.example.chillmusic.fragment.FragmentPlaylists"
         android:label="FragmentPlaylists" >
-        <action
-            android:id="@+id/action_playList_to_songs"
-            app:destination="@id/fragmentSongsFromPlaylist" />
     </fragment>
     <fragment
         android:id="@+id/fragmentSettings"
@@ -37,7 +34,7 @@
         android:label="FragmentAddPlayList" />
     <dialog
         android:id="@+id/fragmentBottomMenu"
-        android:name="com.example.chillmusic.fragment.FragmentBottomMenu"
+        android:name="com.example.chillmusic.fragment.DialogFragmentBottomMenu"
         android:label="FragmentBottomMenu" >
         <argument
             android:name="id"
@@ -45,7 +42,7 @@
     </dialog>
     <dialog
         android:id="@+id/fragmentBottomPlayList"
-        android:name="com.example.chillmusic.fragment.FragmentBottomPlayList"
+        android:name="com.example.chillmusic.fragment.DialogFragmentBottomPlayList"
         android:label="FragmentBottomPlayList" >
         <argument
             android:name="id"
@@ -53,7 +50,7 @@
     </dialog>
     <dialog
         android:id="@+id/fragmentDetail"
-        android:name="com.example.chillmusic.fragment.FragmentDetail"
+        android:name="com.example.chillmusic.fragment.DialogFragmentDetail"
         android:label="FragmentDetail" >
         <argument
             android:name="id"
@@ -72,4 +69,18 @@
     <action
         android:id="@+id/open_playlist_add"
         app:destination="@id/fragmentAddPlayList" />
+    <fragment
+        android:id="@+id/fragmentAlbum"
+        android:name="com.example.chillmusic.fragment.FragmentAlbum"
+        android:label="FragmentAlbum">
+        <argument
+            android:name="album"
+            app:argType="com.example.chillmusic.model.Album" />
+    </fragment>
+    <action
+        android:id="@+id/action_playList_to_songs"
+        app:destination="@id/fragmentSongsFromPlaylist" />
+    <action
+        android:id="@+id/open_album"
+        app:destination="@id/fragmentAlbum" />
 </navigation>

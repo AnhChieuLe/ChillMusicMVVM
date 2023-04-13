@@ -1,6 +1,9 @@
 package com.example.chillmusic.viewmodel
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.net.Uri
+import android.util.Size
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.SeekBar
@@ -9,44 +12,32 @@ import androidx.databinding.BindingAdapter
 import com.example.chillmusic.R
 import com.example.chillmusic.enums.Navigation
 import com.example.chillmusic.model.MusicStyle
+import com.example.chillmusic.model.Song
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
+import kotlinx.coroutines.*
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
-@BindingAdapter("android:color")
-fun setColorStateList(view: BottomNavigationView, style: MusicStyle?) {
-    style ?: return
-    view.setBackgroundColor(style.backgroundColor)
-    view.itemIconTintList = style.stateList
-    view.itemTextColor = style.stateList
-}
-
-@BindingAdapter("android:color")
-fun setTabLayoutColor(tabLayout: TabLayout, style: MusicStyle?){
-    style ?: return
-    tabLayout.setTabTextColors(style.titleColor, style.contentColor)
-    tabLayout.setSelectedTabIndicatorColor(style.contentColor)
-}
-
-@BindingAdapter("android:text")
-fun setText(textView: TextView, content: Int?){
+@BindingAdapter("android:track")
+fun setText(textView: TextView, content: Int?) {
     content ?: return
     textView.text = content.toString()
 }
 
 @BindingAdapter("android:fileSize")
-fun setFileSize(textView: TextView, content: Long?){
+fun setFileSize(textView: TextView, content: Long?) {
     content ?: return
     val str = (content / 2.0.pow(20.0)).roundToInt().toString() + " MB"
     textView.text = str
 }
 
 @BindingAdapter("android:bitrate")
-fun setBitrate(textView: TextView, content: Long?){
+fun setBitrate(textView: TextView, content: Long?) {
     content ?: return
     var str = (content / 1024).toString()
     str += " kbps"
@@ -54,16 +45,22 @@ fun setBitrate(textView: TextView, content: Long?){
 }
 
 @BindingAdapter("android:date")
-fun setDate(textView: TextView, date: Long?){
+fun setDate(textView: TextView, date: Long?) {
     date ?: return
     val simpleDateFormat = SimpleDateFormat("HH:mm - dd/MM/yyyy", Locale.getDefault())
     textView.text = simpleDateFormat.format(Date(date))
 }
 
+@BindingAdapter("android:duration_text")
+fun setDurationText(textView: TextView, duration: Int?) {
+    duration ?: return
+    textView.text = getStringDuration(duration.toLong())
+}
+
 @BindingAdapter("android:src")
-fun setNavigationResource(view: ImageView, navigation: Navigation?) {
+fun setNavigationResource(imageView: ImageView, navigation: Navigation?) {
     navigation ?: return
-    view.setImageResource(
+    imageView.setImageResource(
         when (navigation) {
             Navigation.NORMAL -> R.drawable.change
             Navigation.REPEAT -> R.drawable.repeat
@@ -73,17 +70,42 @@ fun setNavigationResource(view: ImageView, navigation: Navigation?) {
     )
 }
 
-@BindingAdapter("android:duration_text")
-fun setDurationText(view: TextView, duration: Int?) {
-    duration ?: return
-    view.text = getStringDuration(duration.toLong())
+@BindingAdapter("android:uri")
+fun setImageUri(imageView: ImageView, song: Song) {
+    if (song.liveAlbumArt.value == null) {
+        val scope = CoroutineScope(Job() + Dispatchers.IO)
+        scope.launch {
+            try {
+                val image = imageView.context.contentResolver.loadThumbnail(song.uri, Size(128, 128), null)
+                song.liveAlbumArt.postValue(image)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+}
+
+@BindingAdapter("android:color")
+fun setColorStateList(bottomNavigationView: BottomNavigationView, style: MusicStyle?) {
+    style ?: return
+    bottomNavigationView.setBackgroundColor(style.backgroundColor)
+    bottomNavigationView.itemIconTintList = style.stateList
+    bottomNavigationView.itemTextColor = style.stateList
+}
+
+@BindingAdapter("android:color")
+fun setTabLayoutColor(tabLayout: TabLayout, style: MusicStyle?) {
+    style ?: return
+    tabLayout.setTabTextColors(style.titleColor, style.contentColor)
+    tabLayout.setSelectedTabIndicatorColor(style.contentColor)
 }
 
 @BindingAdapter("android:bitmap")
-fun setImage(view : ImageView, bitmap: Bitmap?){
-    bitmap?.let{
-        view.setImageBitmap(it)
-    } ?: view.setImageResource(R.drawable.avatar)
+fun setImage(imageView: ImageView, bitmap: Bitmap?) {
+    bitmap?.let {
+        imageView.setImageBitmap(it)
+    } ?: imageView.setImageResource(R.drawable.avatar)
 }
 
 @BindingAdapter("android:style")
@@ -99,7 +121,9 @@ fun setProgressBarStyle(progressBar: ProgressBar, style: MusicStyle?) {
     progressBar.progressDrawable.setTint(style.contentColor)
 }
 
-private fun getStringDuration(millisecond: Long): String {
+private fun getStringDuration(millisecond: Long?): String {
+    millisecond ?: return ""
+
     val hh = TimeUnit.MILLISECONDS.toHours(millisecond)
     val mm = TimeUnit.MILLISECONDS.toMinutes(millisecond) % 60
     val ss = TimeUnit.MILLISECONDS.toSeconds(millisecond) % 60

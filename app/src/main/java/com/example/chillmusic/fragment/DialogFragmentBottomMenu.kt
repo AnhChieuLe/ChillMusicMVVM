@@ -1,8 +1,6 @@
 package com.example.chillmusic.fragment
 
 import android.app.AlertDialog
-import android.app.Dialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,22 +13,21 @@ import com.example.chillmusic.MainNavDirections
 import com.example.chillmusic.R
 import com.example.chillmusic.data.MediaStoreManager
 import com.example.chillmusic.databinding.FragmentBottomMenuBinding
-import com.example.chillmusic.service.ACTION_START
 import com.example.chillmusic.service.MusicPlayerService
 import com.example.chillmusic.viewmodel.CurrentPlayer
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.io.File
 
-class FragmentBottomMenu : BottomSheetDialogFragment() {
+class DialogFragmentBottomMenu : BottomSheetDialogFragment() {
     private lateinit var binding : FragmentBottomMenuBinding
     private val viewModel: CurrentPlayer by activityViewModels()
-    private val args: FragmentBottomMenuArgs by navArgs()
+    private val args: DialogFragmentBottomMenuArgs by navArgs()
 
     companion object {
-        fun newInstance(id: Long): FragmentBottomMenu{
+        fun newInstance(id: Long): DialogFragmentBottomMenu{
             val args = Bundle()
             args.putLong("id", id)
-            val fragment = FragmentBottomMenu()
+            val fragment = DialogFragmentBottomMenu()
             fragment.arguments = args
             return fragment
         }

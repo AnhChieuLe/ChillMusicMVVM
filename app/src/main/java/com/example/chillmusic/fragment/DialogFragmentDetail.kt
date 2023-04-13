@@ -14,16 +14,16 @@ import com.example.chillmusic.data.MediaStoreManager
 import com.example.chillmusic.databinding.FragmentDetailBinding
 import com.example.chillmusic.viewmodel.CurrentPlayer
 
-class FragmentDetail : DialogFragment() {
+class DialogFragmentDetail : DialogFragment() {
     private lateinit var binding: FragmentDetailBinding
     private val viewModel: CurrentPlayer by activityViewModels()
-    private val args: FragmentDetailArgs by navArgs()
+    private val args: DialogFragmentDetailArgs by navArgs()
 
     companion object {
-        fun newInstance(id: Long): FragmentDetail{
+        fun newInstance(id: Long): DialogFragmentDetail{
             val args = Bundle()
             args.putLong("id", id)
-            val fragment = FragmentDetail()
+            val fragment = DialogFragmentDetail()
             fragment.arguments = args
             return fragment
         }

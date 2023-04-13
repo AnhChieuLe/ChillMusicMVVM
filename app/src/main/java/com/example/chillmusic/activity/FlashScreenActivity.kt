@@ -18,10 +18,11 @@ import com.gun0912.tedpermission.normal.TedPermission
 class FlashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         requestPermission {
             refreshMediaStore{
-                MediaStoreManager.scanMusic(application)
+                MediaStoreManager.loadSong(application)
+                MediaStoreManager.loadAlbum()
+                MediaStoreManager.loadArtist()
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }

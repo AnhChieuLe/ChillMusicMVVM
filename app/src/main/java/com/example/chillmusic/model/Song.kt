@@ -7,6 +7,9 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Parcelable
 import android.provider.MediaStore
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.io.File
 
@@ -26,26 +29,27 @@ data class Song(
     var tracks: Int = 0,
     var composer: String = "",
     var writer: String = "",
-    var albumArt: Bitmap,
     var size: Long = 0,
 ) : Parcelable{
-    val uri: Uri
-        get() {
-            val collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
-            return ContentUris.withAppendedId(collection, id)
-        }
+    val uri: Uri get() = ContentUris.withAppendedId(
+        MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL),
+        id
+    )
+
+    @IgnoredOnParcel
+    var liveAlbumArt : MutableLiveData<Bitmap> = MutableLiveData()
+
     val largeAlbumArt: Bitmap?
         get() {
             val metadata = MediaMetadataRetriever()
             try{
                 metadata.setDataSource(path)
+                val byteArray = metadata.embeddedPicture ?: return null
+                return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
             }catch (e: IllegalArgumentException){
                 e.printStackTrace()
                 return null
             }
-
-            val byteArray = metadata.embeddedPicture ?: return null
-            return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
         }
 
     fun extractMetaData() {

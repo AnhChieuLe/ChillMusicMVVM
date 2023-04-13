@@ -1,11 +1,15 @@
 package com.example.chillmusic.model
 
 import android.graphics.Bitmap
+import androidx.lifecycle.MutableLiveData
+import java.io.Serializable
 
 data class Album(
     val id: Long,
     val name: String,
-    val numOfSong: Int = 0,
-    val albumArt: Bitmap?
-) {
+    val ids: List<Long> = listOf(),
+    val albumArt: MutableLiveData<Bitmap> = MutableLiveData()
+) : Serializable{
+    val style: MusicStyle get() = MusicStyle(albumArt.value)
+    val numOfSong: Int get() = ids.size
 }

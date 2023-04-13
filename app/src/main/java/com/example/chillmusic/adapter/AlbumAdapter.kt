@@ -20,6 +20,11 @@ class AlbumAdapter(val viewModel: CurrentPlayer) : LifecycleAdapter<AlbumAdapter
         }
     }
 
+    private var onItemClick: (Album)->Unit = {}
+    fun setOnItemClickListener(action: (Album)->Unit){
+        onItemClick = action
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemAlbumBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
@@ -29,5 +34,8 @@ class AlbumAdapter(val viewModel: CurrentPlayer) : LifecycleAdapter<AlbumAdapter
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(viewModel, data[position])
+        holder.binding.root.setOnClickListener {
+            onItemClick(data[position])
+        }
     }
 }

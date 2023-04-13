@@ -24,7 +24,8 @@
             android:layout_height="0dp"
             app:shapeAppearanceOverlay="@style/roundedImageView"
             android:src="@drawable/avatar"
-            android:bitmap="@{songViewModel.albumArt}"
+            android:uri="@{songViewModel}"
+            android:bitmap="@{songViewModel.liveAlbumArt}"
             android:contentDescription="@{currentPlayerViewModel.song.title}"
             android:scaleType="centerCrop"
             android:layout_margin="6dp"
@@ -32,6 +33,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+<!--        android:bitmap="@{songViewModel.albumArt}"-->
 
         <TextView
             android:id="@+id/tv_title"

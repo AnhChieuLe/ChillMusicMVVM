@@ -2,6 +2,7 @@ package com.example.chillmusic.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.BlurMaskFilter.Blur
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -42,19 +43,7 @@ class MainActivity : AppCompatActivity() {
         binding.currentPlayer = viewModel
         setContentView(binding.root)
         observer()
-        //handleIntent(intent)
     }
-
-//    private fun handleIntent(intent: Intent?){
-//        if(intent?.action == ACTION_EXPAND){
-//            binding.mainLayout.transitionToState(R.id.expanded)
-//        }
-//    }
-
-//    override fun onNewIntent(intent: Intent?) {
-//        super.onNewIntent(intent)
-//        handleIntent(intent)
-//    }
 
     private fun observer() {
         viewModel.style.observe(this) {

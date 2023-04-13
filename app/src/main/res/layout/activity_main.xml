@@ -34,7 +34,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/player_space"
-            android:paddingHorizontal="8dp"
             app:defaultNavHost="true"
             app:navGraph="@navigation/main_nav" />
 

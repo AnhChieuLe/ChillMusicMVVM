@@ -31,11 +31,9 @@ object CurrentPlayer : ViewModel() {
     val navigation = MutableLiveData(Navigation.NORMAL)
     val isTouching = MutableLiveData(false)
     val style = song.mapWithDefault(MusicStyle()) {
-        MusicStyle(it?.largeAlbumArt ?: it?.albumArt)
+        MusicStyle(it?.largeAlbumArt)
     }
-    val isActive = song.map {
-        it != null
-    }
+    val isActive = song.map { it != null }
 
     private fun LiveData<Song?>.mapWithDefault(defaultValue: MusicStyle, mapper: (Song?) -> MusicStyle): LiveData<MusicStyle> {
         return MediatorLiveData<MusicStyle>().apply {
