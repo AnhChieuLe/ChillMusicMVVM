@@ -9,12 +9,15 @@ import android.widget.SeekBar
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.example.chillmusic.MainNavDirections
 import com.example.chillmusic.R
 import com.example.chillmusic.adapter.SongAdapter
 import com.example.chillmusic.data.MediaStoreManager
 import com.example.chillmusic.databinding.FragmentPlayerBinding
+import com.example.chillmusic.enums.PlayerState
 import com.example.chillmusic.service.ACTION_SEEK_TO
 import com.example.chillmusic.service.MusicPlayerService
 import com.example.chillmusic.viewmodel.CurrentPlayer
@@ -23,6 +26,7 @@ class FragmentPlayer : Fragment() {
     private lateinit var binding : FragmentPlayerBinding
     private val viewModel: CurrentPlayer by activityViewModels()
     private val songAdapter by lazy { SongAdapter(viewModel) }
+    private val state = MediatorLiveData(PlayerState.STATE_HIDE)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentPlayerBinding.inflate(inflater, container, false)
@@ -54,11 +58,21 @@ class FragmentPlayer : Fragment() {
     }
 
     private fun observer() {
-        viewModel.song.observe(viewLifecycleOwner) {
-            if (it == null) {
-                binding.mainLayout.transitionToState(R.id.hide)
-            } else if (binding.mainLayout.currentState == R.id.hide) {
-                binding.mainLayout.transitionToState(R.id.minimize)
+        state.addSource(viewModel.song){
+            if(it == null)
+                state.value = PlayerState.STATE_HIDE
+            else if(binding.mainLayout.currentState == R.id.hide){
+                state.value = PlayerState.STATE_MINI
+            }
+        }
+
+        state.observe(viewLifecycleOwner){
+            when(it){
+                PlayerState.STATE_HIDE -> binding.mainLayout.transitionToState(R.id.hide)
+                PlayerState.STATE_MINI -> binding.mainLayout.transitionToState(R.id.minimize)
+                PlayerState.STATE_EXPAND -> binding.mainLayout.transitionToState(R.id.expanded)
+                PlayerState.STATE_SHOW_PLAYLIST -> binding.mainLayout.transitionToState(R.id.showPlaylist)
+                else -> binding.mainLayout.transitionToState(R.id.hide)
             }
         }
 

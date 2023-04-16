@@ -33,11 +33,13 @@ class DialogFragmentBottomMenu : BottomSheetDialogFragment() {
         }
     }
 
+    override fun getTheme() = R.style.BottomSheetDialog
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentBottomMenuBinding.inflate(inflater, container, false)
-        observer()
         binding.lifecycleOwner = viewLifecycleOwner
         binding.currentPlayer = viewModel
+        observer()
         handleAction()
         return binding.root
     }

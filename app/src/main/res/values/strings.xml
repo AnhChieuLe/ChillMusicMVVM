@@ -7,8 +7,8 @@
     <string name="unknown">Không rõ</string>
     <string name="volume">"Âm lượng: "</string>
     <string name="add_playlist">Thêm danh sách phát</string>
-    <string name="enter_playlist_name">Nhập tên danh sách phát</string>
-    <string name="playlist_create">Tạo danh sách phát</string>
+    <string name="enter_playlist_name">Tên danh sách phát</string>
+    <string name="playlist_create">Khởi tạo</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Preference Titles -->

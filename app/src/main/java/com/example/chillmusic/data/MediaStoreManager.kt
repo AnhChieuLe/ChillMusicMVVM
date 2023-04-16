@@ -9,12 +9,14 @@ import com.example.chillmusic.R
 import com.example.chillmusic.model.Album
 import com.example.chillmusic.model.Artist
 import com.example.chillmusic.model.Song
+import kotlinx.coroutines.*
 
 object MediaStoreManager {
     val songs: MutableSet<Song> = mutableSetOf()
     var albums: MutableSet<Album> = mutableSetOf()
     var artists: MutableSet<Artist> = mutableSetOf()
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun loadSong(application: Application) {
         val resolver = application.contentResolver
 
@@ -71,6 +73,12 @@ object MediaStoreManager {
                     date = date,
                     bitrate = 0L,
                 )
+                val handler = CoroutineExceptionHandler { _, exception ->
+                    exception.printStackTrace()
+                }
+                GlobalScope.launch(Dispatchers.IO + handler) {
+                    song.loadAlbumArt(resolver)
+                }
                 songs.add(song)
             }
         }
@@ -82,6 +90,7 @@ object MediaStoreManager {
                 id = it.key,
                 name = it.value[0].album,
                 ids = it.value.map { song -> song.id },
+                albumArt = it.value[0].liveAlbumArt
             )
         }.toMutableSet()
     }

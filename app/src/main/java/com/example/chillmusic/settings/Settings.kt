@@ -11,5 +11,4 @@ class Settings(application: Application) {
     var volume: Int
         get() = defaultPreferences.getInt("volume", 0)
         set(value) { defaultPreferences.edit().putInt("volume", value).apply() }
-
 }

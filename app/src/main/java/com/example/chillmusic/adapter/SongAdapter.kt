@@ -1,5 +1,6 @@
 package com.example.chillmusic.adapter
 
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
@@ -10,10 +11,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chillmusic.databinding.ItemSongBinding
 import com.example.chillmusic.model.Song
 import com.example.chillmusic.viewmodel.CurrentPlayer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import java.io.IOException
 
 class SongAdapter(
     private val currentPlayerViewModel: CurrentPlayer
-) : RecyclerView.Adapter<SongAdapter.ViewHolder>(){
+) : LifecycleAdapter<SongAdapter.ViewHolder>(){
     var onItemClick: (Song) -> Unit = {}
     var onOptionClick: (Song) -> Unit = {}
 
@@ -34,16 +40,6 @@ class SongAdapter(
         this.onOptionClick = onClick
     }
 
-    override fun onViewAttachedToWindow(holder: ViewHolder) {
-        super.onViewAttachedToWindow(holder)
-        holder.markAttach()
-    }
-
-    override fun onViewDetachedFromWindow(holder: ViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-        holder.markDetach()
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemSongBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
@@ -53,6 +49,7 @@ class SongAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val song = songs[position]
+
         holder.bind(song, currentPlayerViewModel)
         holder.binding.root.setOnClickListener {
             onItemClick(song)
@@ -67,24 +64,9 @@ class SongAdapter(
         }
     }
 
-    class ViewHolder(val binding: ItemSongBinding) : RecyclerView.ViewHolder(binding.root), LifecycleOwner{
-        private val lifecycleRegistry = LifecycleRegistry(this)
-        override val lifecycle: Lifecycle get() = lifecycleRegistry
-
-        init {
-            lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
-        }
-
-        fun markAttach() {
-            lifecycleRegistry.currentState = Lifecycle.State.STARTED
-        }
-
-        fun markDetach() {
-            lifecycleRegistry.currentState = Lifecycle.State.CREATED
-        }
-
+    class ViewHolder(val binding: ItemSongBinding) : LifecycleViewHolder(binding.root){
         fun bind(song: Song, currentPlayerViewModel: CurrentPlayer){
-            binding.songViewModel = song
+            binding.song = song
             binding.currentPlayerViewModel = currentPlayerViewModel
             binding.lifecycleOwner = this
         }

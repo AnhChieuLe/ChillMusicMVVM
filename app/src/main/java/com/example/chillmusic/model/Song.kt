@@ -1,5 +1,6 @@
 package com.example.chillmusic.model
 
+import android.content.ContentResolver
 import android.content.ContentUris
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -7,11 +8,14 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Parcelable
 import android.provider.MediaStore
+import android.util.Size
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.*
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.io.File
+import java.io.IOException
 
 @Parcelize
 data class Song(
@@ -36,13 +40,18 @@ data class Song(
         id
     )
 
+    fun loadAlbumArt(contentResolver: ContentResolver){
+        val image = contentResolver.loadThumbnail(uri, Size(128, 128), null)
+        liveAlbumArt.postValue(image)
+    }
+
     @IgnoredOnParcel
     var liveAlbumArt : MutableLiveData<Bitmap> = MutableLiveData()
 
     val largeAlbumArt: Bitmap?
         get() {
-            val metadata = MediaMetadataRetriever()
             try{
+                val metadata = MediaMetadataRetriever()
                 metadata.setDataSource(path)
                 val byteArray = metadata.embeddedPicture ?: return null
                 return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)

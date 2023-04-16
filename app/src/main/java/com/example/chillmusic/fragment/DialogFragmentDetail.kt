@@ -1,5 +1,6 @@
 package com.example.chillmusic.fragment
 
+import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -13,6 +14,7 @@ import com.example.chillmusic.R
 import com.example.chillmusic.data.MediaStoreManager
 import com.example.chillmusic.databinding.FragmentDetailBinding
 import com.example.chillmusic.viewmodel.CurrentPlayer
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class DialogFragmentDetail : DialogFragment() {
     private lateinit var binding: FragmentDetailBinding
@@ -29,15 +31,7 @@ class DialogFragmentDetail : DialogFragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, R.style.FloatingDialog)
-    }
+    override fun getTheme() = R.style.FloatingDialog
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentDetailBinding.inflate(inflater, container, false)

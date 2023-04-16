@@ -1,8 +1,6 @@
 package com.example.chillmusic.viewmodel
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.net.Uri
 import android.util.Size
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -27,6 +25,15 @@ import kotlin.math.roundToInt
 fun setText(textView: TextView, content: Int?) {
     content ?: return
     textView.text = content.toString()
+}
+
+@BindingAdapter("android:text")
+fun setText(textView: TextView, content: String?) {
+    if(content == null || content == "" || content == "<unknown>"){
+        textView.setText(R.string.unknown)
+    }else{
+        textView.text = content
+    }
 }
 
 @BindingAdapter("android:fileSize")
@@ -70,22 +77,6 @@ fun setNavigationResource(imageView: ImageView, navigation: Navigation?) {
     )
 }
 
-@BindingAdapter("android:uri")
-fun setImageUri(imageView: ImageView, song: Song) {
-    if (song.liveAlbumArt.value == null) {
-        val scope = CoroutineScope(Job() + Dispatchers.IO)
-        scope.launch {
-            try {
-                val image = imageView.context.contentResolver.loadThumbnail(song.uri, Size(128, 128), null)
-                song.liveAlbumArt.postValue(image)
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-}
-
 @BindingAdapter("android:color")
 fun setColorStateList(bottomNavigationView: BottomNavigationView, style: MusicStyle?) {
     style ?: return
@@ -103,9 +94,10 @@ fun setTabLayoutColor(tabLayout: TabLayout, style: MusicStyle?) {
 
 @BindingAdapter("android:bitmap")
 fun setImage(imageView: ImageView, bitmap: Bitmap?) {
-    bitmap?.let {
-        imageView.setImageBitmap(it)
-    } ?: imageView.setImageResource(R.drawable.avatar)
+    if(bitmap != null)
+        imageView.setImageBitmap(bitmap)
+    else
+        imageView.setImageResource(R.drawable.avatar)
 }
 
 @BindingAdapter("android:style")

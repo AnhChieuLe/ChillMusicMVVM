@@ -33,20 +33,24 @@ class FragmentListSong : Fragment() {
 
     private fun setEvent() {
         binding.imgMenu.setOnClickListener {
-            val listener = PopupMenu.OnMenuItemClickListener {item ->
-                when(item.itemId){
-                    R.id.menu_setting -> {
-                        val intent = Intent(requireContext(), SettingsActivity::class.java)
-                        startActivity(intent)
-                    }
-                }
-                true
-            }
-            PopupMenu(requireContext(), it, Gravity.END).apply {
-                inflate(R.menu.toolbar_menu)
-                setOnMenuItemClickListener(listener)
-            }.show()
+            showPopup(it)
         }
+    }
+
+    private fun showPopup(view: View) {
+        val listener = PopupMenu.OnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.menu_setting -> {
+                    val intent = Intent(requireContext(), SettingsActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            true
+        }
+        PopupMenu(requireContext(), view, Gravity.END, R.style.MyPopupMenu, R.style.MyPopupMenu).apply {
+            inflate(R.menu.toolbar_menu)
+            setOnMenuItemClickListener(listener)
+        }.show()
     }
 
     private fun setAdapter() {

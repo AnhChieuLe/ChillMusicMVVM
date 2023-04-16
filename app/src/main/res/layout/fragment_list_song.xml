@@ -55,7 +55,6 @@
                 android:layout_height="wrap_content"
                 app:tabMode="scrollable"
                 android:color="@{currentPlayer.style}"
-                app:layout_scrollFlags="scroll|enterAlways"
                 android:background="@android:color/transparent"/>
         </com.google.android.material.appbar.AppBarLayout>
 

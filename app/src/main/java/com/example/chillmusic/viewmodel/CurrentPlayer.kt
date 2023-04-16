@@ -30,8 +30,11 @@ object CurrentPlayer : ViewModel() {
     val duration = MutableLiveData(0)
     val navigation = MutableLiveData(Navigation.NORMAL)
     val isTouching = MutableLiveData(false)
-    val style = song.mapWithDefault(MusicStyle()) {
-        MusicStyle(it?.largeAlbumArt)
+    var defaultStyle = MusicStyle()
+    val style = song.mapWithDefault(defaultStyle) {
+        it?.largeAlbumArt?.let { albumArt ->
+            MusicStyle(albumArt)
+        } ?: defaultStyle
     }
     val isActive = song.map { it != null }
 
@@ -68,21 +71,21 @@ object CurrentPlayer : ViewModel() {
         song.postValue(null)
     }
 
-    fun addToNext(id: Long){
-        if(!isActive.value!!) return
+    fun addToNext(id: Long) {
+        if (!isActive.value!!) return
         val customPlayList = playList.value
         customPlayList?.addToNext(song.value!!, id)
         playList.postValue(customPlayList)
     }
 
-    fun addToLast(id: Long){
-        if(!isActive.value!!) return
+    fun addToLast(id: Long) {
+        if (!isActive.value!!) return
         val customPlayList = playList.value
         customPlayList?.addToLast(id)
         playList.postValue(customPlayList)
     }
 
-    fun newPlayList(id: Long){
+    fun newPlayList(id: Long) {
         val customPlayList = PlayList("Danh sách tùy chỉnh", mutableListOf(id))
         playList.postValue(customPlayList)
     }
