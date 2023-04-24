@@ -34,7 +34,7 @@ data class PlayList(
     }
 
     fun getNext(song: Song?, navigation: Navigation) : Song?{
-        val list = MediaStoreManager.getSongs(*songs.toLongArray())
+        val list = MediaStoreManager.getSongs(*songs.toLongArray()).toMutableList()
         val currentPosition = list.indexOf(song)
         val isEndOfList = currentPosition == list.lastIndex
 
@@ -61,7 +61,7 @@ data class PlayList(
     }
 
     fun previous(song: Song?, navigation: Navigation): Song?{
-        val list = MediaStoreManager.getSongs(*songs.toLongArray())
+        val list = MediaStoreManager.getSongs(*songs.toLongArray()).toMutableList()
         val previous: Song?
 
         val currentPosition = list.indexOf(song)

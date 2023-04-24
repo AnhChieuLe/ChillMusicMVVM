@@ -1,50 +1,71 @@
 package com.example.chillmusic.viewmodel
 
 import android.graphics.Bitmap
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.SeekBar
-import android.widget.TextView
-import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
-import com.example.chillmusic.R
+import com.example.chillmusic.api.MusicMatchAPI
+import com.example.chillmusic.constant.log
 import com.example.chillmusic.model.PlayList
 import com.example.chillmusic.enums.Navigation
-import com.example.chillmusic.model.MusicStyle
+import com.example.chillmusic.library.MusicStyle
 import com.example.chillmusic.model.Song
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.tabs.TabLayout
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.math.pow
-import kotlin.math.roundToInt
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.launch
 
 object CurrentPlayer : ViewModel() {
     var playList = MutableLiveData(PlayList())
     val name = MutableLiveData("")
     var song = MutableLiveData<Song?>(null)
+    val lyric = song.switchMap {
+        setLyric(it)
+    }
     val isPlaying = MutableLiveData(false)
-    val volume = MutableLiveData(20)
+    val volume = MutableLiveData(70)
     val progress = MutableLiveData(0)
     val duration = MutableLiveData(0)
     val navigation = MutableLiveData(Navigation.NORMAL)
     val isTouching = MutableLiveData(false)
     var defaultStyle = MusicStyle()
-    val style = song.mapWithDefault(defaultStyle) {
-        it?.largeAlbumArt?.let { albumArt ->
-            MusicStyle(albumArt)
-        } ?: defaultStyle
-    }
     val isActive = song.map { it != null }
+    val style = song.mapWithDefault(defaultStyle) {
+        if(it?.liveAlbumArt?.value == null)     defaultStyle
+        else    MusicStyle(it.liveAlbumArt.value)
+    }
 
     private fun LiveData<Song?>.mapWithDefault(defaultValue: MusicStyle, mapper: (Song?) -> MusicStyle): LiveData<MusicStyle> {
-        return MediatorLiveData<MusicStyle>().apply {
-            postValue(defaultValue)
+        return MediatorLiveData(defaultValue).apply {
             addSource(this@mapWithDefault) {
-                it?.let { postValue(mapper(it)) }
+                postValue(mapper(it))
             }
         }
+    }
+
+    private fun setLyric(song: Song?) : LiveData<String>{
+        val lyric = MutableLiveData("Đang tải lời bài hát")
+        song ?: return lyric
+        val handler = CoroutineExceptionHandler { _, throwable ->
+            throwable.printStackTrace()
+        }
+
+        viewModelScope.launch(handler) {
+//            val title = if(song.title.contains("(") && song.title.contains(")"))
+//                song.title.substringAfter("(").substringBefore(")")
+//            else
+//                song.title
+//
+//            val artists = song.artist.split(",").map { it.trim() }
+
+            val response = MusicMatchAPI.apiService.getLyric(
+                track = song.title,
+                artist = song.artist
+            )
+            val lyricResponse = response.body() ?: return@launch
+            lyric.postValue(lyricResponse.message.body.lyrics.body)
+        }
+        return lyric
+    }
+
+    private fun getTracks(song: Song?){
+
     }
 
     fun start() {

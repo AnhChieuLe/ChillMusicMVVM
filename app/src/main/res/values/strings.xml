@@ -3,13 +3,13 @@
     <string name="song">Bài hát</string>
     <string name="playlist">Danh sách phát</string>
     <string name="setting">Cài đặt</string>
-    <string name="channel_media_player">channel_media_player</string>
+    <string name="channel_media_player">Trình phát nhạc</string>
     <string name="unknown">Không rõ</string>
     <string name="volume">"Âm lượng: "</string>
     <string name="add_playlist">Thêm danh sách phát</string>
     <string name="enter_playlist_name">Tên danh sách phát</string>
     <string name="playlist_create">Khởi tạo</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Cài đặt</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
@@ -24,6 +24,13 @@
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="library">Thư viện</string>
+    <string name="music">Âm nhạc</string>
+    <string name="custom">Tùy chỉnh</string>
+    <string name="video">Video</string>
+    <string name="help">Hỗ trợ</string>
+    <string name="image">Ảnh</string>
+    <string name="premium">Premium</string>
     <!-- Preference Titles -->
 
     <!-- Messages Preferences -->

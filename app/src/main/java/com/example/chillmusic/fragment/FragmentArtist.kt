@@ -16,18 +16,24 @@ import com.example.chillmusic.viewmodel.CurrentPlayer
 class FragmentArtist : Fragment() {
     private lateinit var binding: FragmentArtistBinding
     private val viewModel : CurrentPlayer by activityViewModels()
-    private lateinit var adapter: ArtistAdapter
+    private val adapter: ArtistAdapter by lazy { ArtistAdapter(viewModel) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentArtistBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         setAdapter()
+        observer()
         return binding.root
     }
 
     private fun setAdapter() {
-        adapter = ArtistAdapter(viewModel)
         adapter.data = MediaStoreManager.artists.toMutableList()
         binding.recyclerView.adapter = adapter
+    }
+
+    private fun observer(){
+        MediaStoreManager.allSong.observe(viewLifecycleOwner){
+            adapter.data = MediaStoreManager.artists.toMutableList()
+        }
     }
 }

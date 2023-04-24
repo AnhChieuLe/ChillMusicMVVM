@@ -4,7 +4,7 @@
     <data>
         <variable
             name="style"
-            type="com.example.chillmusic.model.MusicStyle" />
+            type="com.example.chillmusic.library.MusicStyle" />
     </data>
     <RelativeLayout
         android:layout_width="match_parent"

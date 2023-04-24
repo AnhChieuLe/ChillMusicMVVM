@@ -4,43 +4,112 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="android.view.View" />
-        <import type="com.example.chillmusic.model.Song" />
-
         <variable
             name="currentPlayer"
             type="com.example.chillmusic.viewmodel.CurrentPlayer" />
     </data>
 
-    <RelativeLayout
-        android:id="@+id/main_layout"
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
-        android:background="@{currentPlayer.style.backgroundColor}"
-        tools:context=".activity.MainActivity">
+        tools:openDrawer="start">
 
-        <Space
-            android:id="@+id/player_space"
-            android:layout_width="match_parent"
-            android:layout_height="62dp"
-            android:layout_alignParentBottom="true"
-            android:visibility="@{currentPlayer.isActive ? View.VISIBLE : View.GONE}"/>
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/nav_main_host"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+        <RelativeLayout
+            android:id="@+id/main_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/player_space"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/main_nav" />
+            android:animateLayoutChanges="true"
+            android:background="@{currentPlayer.style.backgroundColor}"
+            tools:context=".activity.MainActivity">
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/player"
-            android:layout_width="match_parent"
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.appbar.AppBarLayout
+                    android:id="@+id/appbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@{currentPlayer.style.backgroundColor}"
+                    android:orientation="vertical"
+                    app:elevation="0dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        android:layout_marginHorizontal="16dp"
+                        android:gravity="center_vertical"
+                        app:layout_scrollFlags="scroll|enterAlways">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/img_navigation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/navigation"
+                            android:tint="@{currentPlayer.style.contentColor}" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="16dp"
+                            android:layout_toStartOf="@id/img_menu"
+                            android:layout_toEndOf="@id/img_navigation"
+                            android:text="@string/app_name"
+                            android:textColor="@{currentPlayer.style.contentColor}"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/img_menu"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/more"
+                            android:tint="@{currentPlayer.style.contentColor}" />
+                    </RelativeLayout>
+
+                </com.google.android.material.appbar.AppBarLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                    <androidx.fragment.app.FragmentContainerView
+                        android:id="@+id/nav_main_host"
+                        android:name="androidx.navigation.fragment.NavHostFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_above="@id/player_space"
+                        app:defaultNavHost="true"
+                        app:navGraph="@navigation/main_nav" />
+
+                    <Space
+                        android:id="@+id/player_space"
+                        android:layout_width="match_parent"
+                        android:layout_height="62dp"
+                        android:layout_alignParentBottom="true"
+                        android:visibility="@{currentPlayer.isActive ? View.VISIBLE : View.GONE}" />
+                </RelativeLayout>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/player"
+                android:name="com.example.chillmusic.fragment.FragmentPlayer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigation"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:name="com.example.chillmusic.fragment.FragmentPlayer"/>
-    </RelativeLayout>
+            android:layout_gravity="start"
+            app:menu="@menu/navigation_menu"
+            app:drawerLayoutCornerSize="0dp"
+            android:style="@{currentPlayer.style}"
+            app:itemShapeFillColor="@android:color/transparent"/>
+    </androidx.drawerlayout.widget.DrawerLayout>
 </layout>

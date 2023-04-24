@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.chillmusic.MainNavDirections
 import com.example.chillmusic.R
 import com.example.chillmusic.adapter.PlayListAdapter
 import com.example.chillmusic.databinding.FragmentPlaylistsBinding
@@ -38,7 +39,7 @@ class FragmentPlaylists : Fragment() {
         binding.rcvPlaylist.adapter = adapter
         adapter.setOnClickListener {
             val ids = it.songs.toLongArray()
-            val action = FragmentPlaylistsDirections.actionPlayListToSongs(ids)
+            val action = MainNavDirections.actionPlayListToSongs(ids)
             findNavController().navigate(action)
         }
 

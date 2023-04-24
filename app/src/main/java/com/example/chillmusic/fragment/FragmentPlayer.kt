@@ -2,6 +2,7 @@ package com.example.chillmusic.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +46,7 @@ class FragmentPlayer : Fragment() {
                 R.id.minimize -> activity?.finish()
                 R.id.expanded -> binding.mainLayout.transitionToState(R.id.minimize)
                 R.id.showPlaylist -> binding.mainLayout.transitionToState(R.id.expanded)
+                R.id.showLyric -> binding.mainLayout.transitionToState(R.id.expanded)
             }
         }
     }
@@ -105,6 +107,10 @@ class FragmentPlayer : Fragment() {
         binding.extensions.playlistAdd.setOnClickListener {
             val action = MainNavDirections.openBottomPlaylist(viewModel.song.value!!.id)
             findNavController().navigate(action)
+        }
+
+        binding.extensions.timer.setOnClickListener {
+            binding.mainLayout.transitionToState(R.id.showLyric)
         }
     }
 }

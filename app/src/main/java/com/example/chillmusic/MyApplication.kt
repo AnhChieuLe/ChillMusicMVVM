@@ -3,12 +3,6 @@ package com.example.chillmusic
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Intent
-import android.net.Uri
-import android.os.Environment
-import com.example.chillmusic.constant.log
-import com.example.chillmusic.model.MusicStyle
-import com.example.chillmusic.viewmodel.CurrentPlayer
 
 
 const val CHANNEL_MEDIA_PLAYER = "CHANNEL_MEDIA_PLAYER"

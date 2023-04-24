@@ -85,7 +85,7 @@
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_marginTop="16dp"
-                android:src="@drawable/timer"
+                android:src="@drawable/subtitle"
                 android:tint="@{currentPlayer.style.contentColor}"
                 app:layout_constraintEnd_toStartOf="@id/share"
                 app:layout_constraintStart_toEndOf="@id/playlist_add"

@@ -3,16 +3,13 @@ package com.example.chillmusic.adapter
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.chillmusic.data.MediaStoreManager
-import com.example.chillmusic.fragment.FragmentAlbums
-import com.example.chillmusic.fragment.FragmentArtist
-import com.example.chillmusic.fragment.FragmentPlaylists
-import com.example.chillmusic.fragment.FragmentSongs
+import com.example.chillmusic.fragment.*
 
 class ListSongAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun getItemCount() = 4
 
     override fun createFragment(position: Int): Fragment {
-        val fragmentSongs = FragmentSongs.newInstance(MediaStoreManager.songs.map { it.id }.toLongArray())
+        val fragmentSongs = FragmentAllSong()
         val fragmentPlaylists = FragmentPlaylists()
         val fragmentAlbums = FragmentAlbums()
         val fragmentArtist = FragmentArtist()

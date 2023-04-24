@@ -16,7 +16,6 @@ fun log(action: Int){
         ACTION_CLEAR    ->  "ACTION_CLEAR"
         ACTION_SKIP_TO_PREVIOUS ->  "ACTION_PREVIOUS"
         ACTION_SKIP_TO_NEXT     ->  "ACTION_NEXT"
-        ACTION_START    ->  "ACTION_START"
         else -> "Con cac"
     }
     log(strAction)

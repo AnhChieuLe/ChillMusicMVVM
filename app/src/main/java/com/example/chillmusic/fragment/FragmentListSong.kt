@@ -7,15 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.chillmusic.R
 import com.example.chillmusic.activity.SettingsActivity
 import com.example.chillmusic.adapter.ListSongAdapter
+import com.example.chillmusic.data.MediaStoreManager
 import com.example.chillmusic.databinding.FragmentListSongBinding
+import com.example.chillmusic.enums.Sort
+import com.example.chillmusic.enums.SortType
 import com.example.chillmusic.viewmodel.CurrentPlayer
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 class FragmentListSong : Fragment() {
     private lateinit var binding: FragmentListSongBinding
@@ -32,25 +38,18 @@ class FragmentListSong : Fragment() {
     }
 
     private fun setEvent() {
-        binding.imgMenu.setOnClickListener {
-            showPopup(it)
-        }
-    }
-
-    private fun showPopup(view: View) {
-        val listener = PopupMenu.OnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.menu_setting -> {
-                    val intent = Intent(requireContext(), SettingsActivity::class.java)
-                    startActivity(intent)
+        binding.refresh.setOnRefreshListener {
+            activity?.let {
+                MainScope().launch {
+                    MediaStoreManager.refreshMediaStore(it.application){
+                        MediaStoreManager.loadSong(it.application)
+                        MediaStoreManager.loadAlbum()
+                        MediaStoreManager.loadArtist()
+                    }
+                    binding.refresh.isRefreshing = false
                 }
             }
-            true
         }
-        PopupMenu(requireContext(), view, Gravity.END, R.style.MyPopupMenu, R.style.MyPopupMenu).apply {
-            inflate(R.menu.toolbar_menu)
-            setOnMenuItemClickListener(listener)
-        }.show()
     }
 
     private fun setAdapter() {
@@ -67,4 +66,6 @@ class FragmentListSong : Fragment() {
         }
         mediator.attach()
     }
+
+
 }

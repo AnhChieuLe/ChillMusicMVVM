@@ -6,4 +6,6 @@
     <color name="orange1">#B85600</color>
     <color name="orange2">#753700</color>
 
+    <color name="light_item_background">#80FFFFFF</color>
+    <color name="dark_item_background">#80000000</color>
 </resources>

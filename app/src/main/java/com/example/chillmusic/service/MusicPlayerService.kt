@@ -12,7 +12,6 @@ import android.os.IBinder
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.Observer
 import androidx.media.app.NotificationCompat.MediaStyle
@@ -33,8 +32,7 @@ const val ACTION_PLAY = 2
 const val ACTION_CLEAR = 3
 const val ACTION_SKIP_TO_NEXT = 4
 const val ACTION_SKIP_TO_PREVIOUS = 5
-const val ACTION_START = 6
-const val ACTION_SEEK_TO = 7
+const val ACTION_SEEK_TO = 6
 
 class MusicPlayerService : Service() {
     private val mediaPlayer = MediaPlayer()
@@ -42,27 +40,25 @@ class MusicPlayerService : Service() {
     private val settings by lazy { Settings(application) }
     private val song: Song get() = CurrentPlayer.song.value!!
     private val imageDefault: Bitmap by lazy { BitmapFactory.decodeResource(resources, R.drawable.avatar) }
-    private val mediaSessionCompat: MediaSessionCompat by lazy {
-        MediaSessionCompat(this, "tag").apply {
+    private val mediaSession: MediaSessionCompat by lazy {
+        MediaSessionCompat(this, "main.session.compat").apply {
             setCallback(mediaSessionCallback)
         }
     }
     private val mediaSessionCallback = object : MediaSessionCompat.Callback() {
         override fun onPause() {
-            super.onPause()
+            //super.onPause()
             CurrentPlayer.pause()
         }
 
         override fun onPlay() {
-            super.onPlay()
+            //super.onPlay()
             CurrentPlayer.play()
-            mediaSessionCompat.isActive = true
         }
 
         override fun onStop() {
-            super.onStop()
+            //super.onStop()
             CurrentPlayer.clear()
-            mediaSessionCompat.isActive = false
         }
 
         override fun onSeekTo(pos: Long) {
@@ -79,22 +75,17 @@ class MusicPlayerService : Service() {
             super.onSkipToPrevious()
             CurrentPlayer.previous()
         }
-    }
 
-    private val mediaMetadata
-        get() = MediaMetadata.Builder().apply {
-            putLong(MediaMetadata.METADATA_KEY_DURATION, /*song.duration.toLong()*/ -1L)
-            putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, song.liveAlbumArt.value)
-            putString(MediaMetadata.METADATA_KEY_TITLE, song.title)
-            putString(MediaMetadata.METADATA_KEY_ARTIST, song.artist)
-            putString(MediaMetadata.METADATA_KEY_ALBUM, song.album)
-        }.build()
+        override fun onMediaButtonEvent(mediaButtonEvent: Intent?): Boolean {
+            log(mediaButtonEvent?.action.toString())
+            return super.onMediaButtonEvent(mediaButtonEvent)
+        }
+    }
 
     private lateinit var audioManager: AudioManager
     private lateinit var audioAttributes: AudioAttributes
     private lateinit var focusRequest: AudioFocusRequest
     private var audioFocusRequest: Int = 0
-
     private val audioFocusChangeListener = OnAudioFocusChangeListener { focusChange ->
         val action = when (focusChange) {
             AudioManager.AUDIOFOCUS_GAIN -> ACTION_PLAY
@@ -129,28 +120,24 @@ class MusicPlayerService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent ?: return START_NOT_STICKY
-        log("onStartCommand")
 
         val action = intent.getIntExtra("action", 0)
-        if(action == ACTION_SEEK_TO){
-            val progress = intent.getIntExtra("progress", 0)
-            mediaPlayer.seekTo(progress)
-        }
+        val progress = intent.getIntExtra("progress", 0)
+        handleAction(action, progress)
 
-        handleAction(action)
-        MediaButtonReceiver.handleIntent(mediaSessionCompat, intent)
+        MediaButtonReceiver.handleIntent(mediaSession, intent)
 
         return START_NOT_STICKY
     }
 
-    private fun handleAction(action: Int) {
+    private fun handleAction(action: Int, progress: Int = 0) {
         when (action) {
             ACTION_PAUSE -> CurrentPlayer.pause()
             ACTION_PLAY -> CurrentPlayer.play()
             ACTION_CLEAR -> CurrentPlayer.clear()
             ACTION_SKIP_TO_PREVIOUS -> CurrentPlayer.previous()
             ACTION_SKIP_TO_NEXT -> CurrentPlayer.next()
-            ACTION_START -> CurrentPlayer.start()
+            ACTION_SEEK_TO -> mediaPlayer.seekTo(progress)
         }
     }
 
@@ -166,19 +153,17 @@ class MusicPlayerService : Service() {
     }
 
     private fun pauseMusic() {
-        if (!mediaPlayer.isPlaying) return
         mediaPlayer.pause()
         sendNotification()
     }
 
     private fun playMusic() {
-        if (mediaPlayer.isPlaying) return
         mediaPlayer.startMediaPlayer()
         sendNotification()
     }
 
     private fun MediaPlayer.startMediaPlayer() {
-        if(settings.autoPause)
+        if (settings.autoPause)
             audioFocusRequest = audioManager.requestAudioFocus(focusRequest)
         else
             audioManager.abandonAudioFocusRequest(focusRequest)
@@ -204,7 +189,8 @@ class MusicPlayerService : Service() {
     }
 
     private val observerSong = Observer<Song?> {
-        it?.let { startMediaPlayer() } ?: stopSelf()
+        if (it != null) startMediaPlayer()
+        else stopSelf()
     }
 
     private fun registerLivedata() {
@@ -219,42 +205,46 @@ class MusicPlayerService : Service() {
         CurrentPlayer.song.removeObserver(observerSong)
     }
 
-    private fun Timer.start() {
-        val task = object : TimerTask() {
-            override fun run() {
-                if (mediaPlayer.isPlaying && !CurrentPlayer.isTouching.value!!)
-                    CurrentPlayer.progress.postValue(mediaPlayer.currentPosition)
-            }
+    private val playbackState: PlaybackStateCompat
+        get() {
+            return PlaybackStateCompat.Builder().apply {
+                setState(PlaybackStateCompat.STATE_PLAYING, mediaPlayer.currentPosition.toLong(), 1F)
+                setActions(
+                    PlaybackStateCompat.ACTION_SEEK_TO
+                            or PlaybackStateCompat.ACTION_SKIP_TO_NEXT
+                            or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
+                            or PlaybackStateCompat.ACTION_PAUSE
+                            or PlaybackStateCompat.ACTION_PLAY
+                            or PlaybackStateCompat.ACTION_STOP
+                )
+            }.build()
         }
-        scheduleAtFixedRate(task, 0, 200)
-    }
 
-    private fun sendNotification() {
+    private val pendingIntent by lazy {
         val intent = Intent(this, MainActivity::class.java)
         intent.action = MainActivity.ACTION_EXPAND
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+    }
 
-        val playbackState = PlaybackStateCompat.Builder().apply {
-            setState(PlaybackStateCompat.STATE_PLAYING, mediaPlayer.currentPosition.toLong(), 1F)
-            setActions(
-                   PlaybackStateCompat.ACTION_SEEK_TO
-                or PlaybackStateCompat.ACTION_SKIP_TO_NEXT
-                or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
-                or PlaybackStateCompat.ACTION_PAUSE
-                or PlaybackStateCompat.ACTION_PLAY
-                or PlaybackStateCompat.ACTION_PLAY_PAUSE
-                or PlaybackStateCompat.ACTION_STOP
-            )
+    private val style
+        get() = MediaStyle()
+            .setShowActionsInCompactView(1, 3)
+            .setMediaSession(mediaSession.sessionToken)
+
+    private val mediaMetadata
+        get() = MediaMetadata.Builder().apply {
+            putLong(MediaMetadata.METADATA_KEY_DURATION, /*song.duration.toLong()*/ -1L)
+            putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, song.liveAlbumArt.value ?: imageDefault)
+            putString(MediaMetadata.METADATA_KEY_TITLE, song.title)
+            putString(MediaMetadata.METADATA_KEY_ARTIST, song.artist)
+            putString(MediaMetadata.METADATA_KEY_ALBUM, song.album)
         }.build()
 
-        mediaSessionCompat.apply {
+    private fun sendNotification() {
+        mediaSession.apply {
             setMetadata(MediaMetadataCompat.fromMediaMetadata(mediaMetadata))
             setPlaybackState(playbackState)
         }
-
-        val style = MediaStyle()
-            .setShowActionsInCompactView(1, 3)
-            .setMediaSession(mediaSessionCompat.sessionToken)
 
         val notification = NotificationCompat.Builder(this, CHANNEL_MEDIA_PLAYER).apply {
             setSmallIcon(R.drawable.music_note)
@@ -278,14 +268,23 @@ class MusicPlayerService : Service() {
 
     //Service -> Broadcast -> Service
     private fun getPendingIntent(action: Int): PendingIntent {
-        val intent = Intent(this, MyReceiver::class.java).apply {
-            putExtra("action", action)
-        }
+        val intent = Intent(this, MyReceiver::class.java)
+        intent.putExtra("action", action)
         return PendingIntent.getBroadcast(
             applicationContext,
             action,
             intent,
             PendingIntent.FLAG_IMMUTABLE
         )
+    }
+
+    private fun Timer.start() {
+        val task = object : TimerTask() {
+            override fun run() {
+                if (mediaPlayer.isPlaying && !CurrentPlayer.isTouching.value!!)
+                    CurrentPlayer.progress.postValue(mediaPlayer.currentPosition)
+            }
+        }
+        scheduleAtFixedRate(task, 0, 200)
     }
 }

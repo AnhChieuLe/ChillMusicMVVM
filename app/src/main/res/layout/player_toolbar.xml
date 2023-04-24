@@ -27,7 +27,7 @@
             android:layout_centerInParent="true"
             android:textColor="@{currentPlayer.style.contentColor}"
             android:layout_gravity="center"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold"/>
 
     </RelativeLayout>

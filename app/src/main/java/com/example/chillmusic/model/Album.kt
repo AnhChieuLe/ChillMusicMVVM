@@ -2,6 +2,7 @@ package com.example.chillmusic.model
 
 import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
+import com.example.chillmusic.library.MusicStyle
 import java.io.Serializable
 
 data class Album(

@@ -12,11 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.chillmusic.R
 import com.example.chillmusic.constant.log
 import com.example.chillmusic.data.MediaStoreManager
-import com.example.chillmusic.model.MusicStyle
+import com.example.chillmusic.library.MusicStyle
 import com.example.chillmusic.model.Song
 import com.example.chillmusic.viewmodel.CurrentPlayer
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 
 class FlashScreenActivity : AppCompatActivity() {
@@ -24,20 +26,13 @@ class FlashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         CurrentPlayer.defaultStyle = MusicStyle(BitmapFactory.decodeResource(resources, R.drawable.avatar))
         requestPermission {
-            refreshMediaStore {
+            MediaStoreManager.refreshMediaStore(application) {
                 MediaStoreManager.loadSong(application)
                 MediaStoreManager.loadAlbum()
                 MediaStoreManager.loadArtist()
-                startActivity(Intent(this, MainActivity::class.java))
+                startActivity(Intent(this@FlashScreenActivity, MainActivity::class.java))
                 finish()
             }
-        }
-    }
-
-    private fun refreshMediaStore(callback: () -> Unit) {
-        val paths = arrayOf("/storage/emulated/0/")
-        MediaScannerConnection.scanFile(this, paths, null) { path, uri ->
-            callback()
         }
     }
 

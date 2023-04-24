@@ -72,7 +72,7 @@ class DialogFragmentBottomMenu : BottomSheetDialogFragment() {
 
     private fun playNew(id: Long){
         viewModel.newPlayList(id)
-        viewModel.song.postValue(MediaStoreManager.getSongs(id)[0])
+        viewModel.song.postValue(MediaStoreManager.getSongs(id))
         val intent = Intent(requireContext(), MusicPlayerService::class.java)
         activity?.startService(intent)
     }
@@ -88,7 +88,7 @@ class DialogFragmentBottomMenu : BottomSheetDialogFragment() {
     }
 
     private fun delete(id: Long){
-        val path = MediaStoreManager.getSongs(id)[0].path
+        val path = MediaStoreManager.getSongs(id)?.path ?: return
         val file = File(path)
         val builder = AlertDialog.Builder(requireContext())
             .setTitle("Xác nhận xóa")

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
+import com.example.chillmusic.R
 import com.example.chillmusic.adapter.PlayListAdapter
 import com.example.chillmusic.databinding.FragmentAddToPlaylistBinding
 import com.example.chillmusic.viewmodel.CurrentPlayer
@@ -30,6 +31,8 @@ class DialogFragmentBottomPlayList : BottomSheetDialogFragment(){
             return fragment
         }
     }
+
+    override fun getTheme() = R.style.BottomSheetDialog
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentAddToPlaylistBinding.inflate(inflater, container, false)

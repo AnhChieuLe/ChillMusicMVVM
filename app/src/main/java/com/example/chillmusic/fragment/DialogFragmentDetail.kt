@@ -37,8 +37,8 @@ class DialogFragmentDetail : DialogFragment() {
         binding = FragmentDetailBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.currentPlayer = viewModel
-        val song = MediaStoreManager.getSongs(args.id)[0]
-        song.extractMetaData()
+        val song = MediaStoreManager.getSongs(args.id)
+        song?.extractMetaData()
         binding.song = song
 
         return binding.root

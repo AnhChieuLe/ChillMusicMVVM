@@ -1,7 +1,7 @@
 package com.example.chillmusic.viewmodel
 
 import android.graphics.Bitmap
-import android.util.Size
+import android.graphics.drawable.ColorDrawable
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.SeekBar
@@ -9,12 +9,11 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.example.chillmusic.R
 import com.example.chillmusic.enums.Navigation
-import com.example.chillmusic.model.MusicStyle
-import com.example.chillmusic.model.Song
+import com.example.chillmusic.library.MusicStyle
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.*
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -111,6 +110,14 @@ fun setSeekBarStyle(seekbar: SeekBar, style: MusicStyle?) {
 fun setProgressBarStyle(progressBar: ProgressBar, style: MusicStyle?) {
     style ?: return
     progressBar.progressDrawable.setTint(style.contentColor)
+}
+
+@BindingAdapter("android:style")
+fun setNavigationStyle(navigation: NavigationView, style: MusicStyle?){
+    style ?: return
+    navigation.itemIconTintList = style.stateList
+    navigation.setBackgroundColor(style.backgroundColor)
+    navigation.itemTextColor = style.stateList
 }
 
 private fun getStringDuration(millisecond: Long?): String {

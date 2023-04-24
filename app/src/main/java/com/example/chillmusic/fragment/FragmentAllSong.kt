@@ -22,23 +22,11 @@ import com.example.chillmusic.model.Song
 import com.example.chillmusic.viewmodel.CurrentPlayer
 import com.example.chillmusic.service.MusicPlayerService
 
-class FragmentSongs : Fragment() {
+class FragmentAllSong : Fragment() {
     private val viewModel: CurrentPlayer by activityViewModels()
     private lateinit var binding: FragmentSongsBinding
     private val adapter: SongAdapter by lazy { SongAdapter(viewModel) }
-    private val args: FragmentSongsArgs by navArgs()
-    private val ids by lazy { args.songs ?: longArrayOf() }
-    private val songs get() = MediaStoreManager.getSongs(*ids).toMutableList()
-
-    companion object {
-        fun newInstance(ids: LongArray): FragmentSongs{
-            val args = Bundle()
-            args.putLongArray("songs", ids)
-            val fragment = FragmentSongs()
-            fragment.arguments = args
-            return fragment
-        }
-    }
+    private val songs get() = MediaStoreManager.songs.toMutableList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentSongsBinding.inflate(inflater, container, false)
