@@ -12,20 +12,20 @@ Rebuild from [Chill Music MVC](https://github.com/AnhChieuLe/ChillMusic)
 
 Danh sách nhạc với được lấy từ file các file nhạc trong máy
 
-![songs](https://user-images.githubusercontent.com/101029548/217826284-05e5d1f0-f95a-47e0-b30b-c8ad3ef64abf.png)
+![songs](https://user-images.githubusercontent.com/101029548/234014434-d4ddfce6-ca5c-4d7a-b4e9-08155cc4ce46.png)
 
 Cung cấp các kiểu sắp xếp khác nhau
 
-![sort2](https://user-images.githubusercontent.com/101029548/217826410-74815b12-0d0d-4c72-b9c2-23e3af88de70.png) | ![sort1](https://user-images.githubusercontent.com/101029548/217826486-55b6be9d-4455-4046-8fce-a35a5dbc106e.png) | ![sort3](https://user-images.githubusercontent.com/101029548/217826604-2628d397-4d90-401d-b2e6-8f8849ff6043.png)
+![sort2](https://user-images.githubusercontent.com/101029548/234014063-cf076ea3-1e70-4326-98e9-3d060a811e4b.png)| ![sort1](https://user-images.githubusercontent.com/101029548/234014086-39173b3f-6db4-4c70-ba7d-0151ab5295d7.png) | ![sort3](https://user-images.githubusercontent.com/101029548/234014097-c37d092c-51e8-4061-b929-e0c1bc8ea946.png)
 :-:|:-:|:-:
 
 Nhấn vào để phát hoặc nhấn vào detail để phát với các chế độ khác nhau
 
-![detail](https://user-images.githubusercontent.com/101029548/217826718-018c3862-132a-49e5-bf3c-058d53d319a2.png)
+![detail](https://user-images.githubusercontent.com/101029548/234013886-ab739710-e9f9-46b9-be4e-91f6f6e10e4e.png)
 
 Xem thông tin bài hát
 
-![all_info](https://user-images.githubusercontent.com/101029548/217826948-d5d293ad-de1b-4b76-ac28-2b71f56de35b.png)
+![all_info](https://user-images.githubusercontent.com/101029548/234013851-3686a471-d8bf-41ef-bcef-4143dc8af041.png)
 
 Tìm kiếm bài hát theo tên
 
@@ -33,12 +33,12 @@ Tìm kiếm bài hát theo tên
 
 ## Màn hình phát nhạc
 
-![list](https://user-images.githubusercontent.com/101029548/217827389-1b7bb33b-f8a2-4246-a97c-67e2a9a1568f.png) | ![info](https://user-images.githubusercontent.com/101029548/217827288-839a2e1e-2de3-40f3-82f9-dd3df5f8b8d3.png) | ![lyrics](https://user-images.githubusercontent.com/101029548/217827275-7d65ee8a-5845-41d2-9ae0-9f20dfbdf02c.png)
+![list](https://user-images.githubusercontent.com/101029548/234013213-73f788fd-f36c-4034-a2d6-8fe6aa72ecbc.png) | ![info](https://user-images.githubusercontent.com/101029548/234013242-3f9be38a-a960-445c-ae40-abe3d423a021.png) | ![lyrics](https://user-images.githubusercontent.com/101029548/234013144-efa02228-0bdc-40a2-8539-a59b5556a769.png)
 :-:|:-:|:-:
 
 ## Danh sách phát
 
-![playlist](https://user-images.githubusercontent.com/101029548/217827959-8f3b607f-0021-4f71-b262-13e59e2f68ce.png) | ![playlist2](https://user-images.githubusercontent.com/101029548/217827471-c40d13c5-e040-4980-87d2-540919d17e5a.png)
+![playlist](https://user-images.githubusercontent.com/101029548/234012400-d7b95866-b3f3-4a95-a136-560b3b75cb85.png) | ![playlist2](https://user-images.githubusercontent.com/101029548/217827471-c40d13c5-e040-4980-87d2-540919d17e5a.png)
 :-:|:-:
 
 ## Setting
@@ -51,4 +51,4 @@ https://user-images.githubusercontent.com/101029548/217840344-4041f8d2-bb43-4224
 
 ## Notification Media Style
 
-![notification](https://user-images.githubusercontent.com/101029548/217828032-11031f2b-965b-445d-a540-b75f4df1b066.png)
+![notification](https://user-images.githubusercontent.com/101029548/234012323-2f01ebbd-779d-4946-abff-75292795bb7d.png)
