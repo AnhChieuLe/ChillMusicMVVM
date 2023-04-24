@@ -49,6 +49,9 @@ Tìm kiếm bài hát theo tên
 
 https://user-images.githubusercontent.com/101029548/217840344-4041f8d2-bb43-4224-ba81-3b4032fa1f76.mp4
 
+https://user-images.githubusercontent.com/101029548/234016507-7c01b74c-91c0-495d-8a4d-44b5979e3985.mov
+
+
 ## Notification Media Style
 
 ![notification](https://user-images.githubusercontent.com/101029548/234012323-2f01ebbd-779d-4946-abff-75292795bb7d.png)
