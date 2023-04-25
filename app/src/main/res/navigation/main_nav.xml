@@ -74,4 +74,11 @@
     <action
         android:id="@+id/open_album"
         app:destination="@id/fragmentAlbum" />
+    <dialog
+        android:id="@+id/dialogFragmentTimePicker"
+        android:name="com.example.chillmusic.fragment.DialogFragmentTimePicker"
+        android:label="DialogFragmentTimePicker" />
+    <action
+        android:id="@+id/action_global_dialogFragmentTimePicker"
+        app:destination="@id/dialogFragmentTimePicker" />
 </navigation>

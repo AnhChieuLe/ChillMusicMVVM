@@ -1,11 +1,9 @@
 package com.example.chillmusic.viewmodel
 
 import android.graphics.Bitmap
-import android.graphics.drawable.ColorDrawable
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.SeekBar
-import android.widget.TextView
+import android.graphics.Paint
+import android.view.View
+import android.widget.*
 import androidx.databinding.BindingAdapter
 import com.example.chillmusic.R
 import com.example.chillmusic.enums.Navigation
@@ -19,6 +17,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.pow
 import kotlin.math.roundToInt
+
 
 @BindingAdapter("android:track")
 fun setText(textView: TextView, content: Int?) {
@@ -59,6 +58,12 @@ fun setDate(textView: TextView, date: Long?) {
 
 @BindingAdapter("android:duration_text")
 fun setDurationText(textView: TextView, duration: Int?) {
+    duration ?: return
+    textView.text = getStringDuration(duration.toLong())
+}
+
+@BindingAdapter("android:duration_text")
+fun setDurationText(textView: TextView, duration: Long?) {
     duration ?: return
     textView.text = getStringDuration(duration.toLong())
 }
@@ -120,8 +125,30 @@ fun setNavigationStyle(navigation: NavigationView, style: MusicStyle?){
     navigation.itemTextColor = style.stateList
 }
 
+@BindingAdapter("android:style")
+fun setNumberPickerStyle(numberPicker: NumberPicker, style: MusicStyle?){
+    style ?: return
+    numberPicker.textColor = style.contentColor
+
+    numberPicker.textSize = 64F
+    numberPicker.textSize = 64F
+    numberPicker.textSize = 64F
+
+    numberPicker.selectionDividerHeight = 0
+    numberPicker.selectionDividerHeight = 0
+    numberPicker.selectionDividerHeight = 0
+}
+
+@BindingAdapter("android:max")
+fun setNumberPickerValue(numberPicker: NumberPicker, max: Int?){
+    max ?: return
+    numberPicker.minValue = 0
+    numberPicker.maxValue = max
+}
+
 private fun getStringDuration(millisecond: Long?): String {
     millisecond ?: return ""
+    if(millisecond < 0) return ""
 
     val hh = TimeUnit.MILLISECONDS.toHours(millisecond)
     val mm = TimeUnit.MILLISECONDS.toMinutes(millisecond) % 60

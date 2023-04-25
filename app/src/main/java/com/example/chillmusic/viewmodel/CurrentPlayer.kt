@@ -1,6 +1,6 @@
 package com.example.chillmusic.viewmodel
 
-import android.graphics.Bitmap
+import android.os.CountDownTimer
 import androidx.lifecycle.*
 import com.example.chillmusic.api.MusicMatchAPI
 import com.example.chillmusic.constant.log
@@ -15,11 +15,9 @@ object CurrentPlayer : ViewModel() {
     var playList = MutableLiveData(PlayList())
     val name = MutableLiveData("")
     var song = MutableLiveData<Song?>(null)
-    val lyric = song.switchMap {
-        setLyric(it)
-    }
+    val lyric = song.switchMap { setLyric(it) }
     val isPlaying = MutableLiveData(false)
-    val volume = MutableLiveData(70)
+    val volume = MutableLiveData(20)
     val progress = MutableLiveData(0)
     val duration = MutableLiveData(0)
     val navigation = MutableLiveData(Navigation.NORMAL)
@@ -47,13 +45,6 @@ object CurrentPlayer : ViewModel() {
         }
 
         viewModelScope.launch(handler) {
-//            val title = if(song.title.contains("(") && song.title.contains(")"))
-//                song.title.substringAfter("(").substringBefore(")")
-//            else
-//                song.title
-//
-//            val artists = song.artist.split(",").map { it.trim() }
-
             val response = MusicMatchAPI.apiService.getLyric(
                 track = song.title,
                 artist = song.artist
@@ -64,16 +55,13 @@ object CurrentPlayer : ViewModel() {
         return lyric
     }
 
-    private fun getTracks(song: Song?){
-
-    }
-
     fun start() {
         isPlaying.postValue(true)
     }
 
     fun next() {
         song.postValue(playList.value?.getNext(song.value, navigation.value!!))
+        isPlaying.postValue(true)
     }
 
     fun previous() {
@@ -121,5 +109,30 @@ object CurrentPlayer : ViewModel() {
                 else -> Navigation.NORMAL
             }
         )
+    }
+
+    private lateinit var countDownTimer: CountDownTimer
+    val timeUntilFinished: MutableLiveData<Long> = MutableLiveData(-1L)
+    val isCountDown = timeUntilFinished.map { it > 0 }
+
+    fun startCountDown(time: Long){
+        timeUntilFinished.postValue(time)
+        if(this::countDownTimer.isInitialized)  countDownTimer.cancel()
+        countDownTimer = object : CountDownTimer(time, 1000L){
+            override fun onTick(millisUntilFinished: Long) {
+                timeUntilFinished.postValue(millisUntilFinished)
+            }
+
+            override fun onFinish() {
+                timeUntilFinished.postValue(-1L)
+                pause()
+            }
+        }
+        countDownTimer.start()
+    }
+
+    fun stopCountDown(){
+        countDownTimer.cancel()
+        timeUntilFinished.postValue(-1L)
     }
 }

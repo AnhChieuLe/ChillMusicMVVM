@@ -109,8 +109,12 @@ class FragmentPlayer : Fragment() {
             findNavController().navigate(action)
         }
 
-        binding.extensions.timer.setOnClickListener {
+        binding.extensions.lyrics.setOnClickListener {
             binding.mainLayout.transitionToState(R.id.showLyric)
+        }
+
+        binding.extensions.timer.setOnClickListener {
+            findNavController().navigate(R.id.action_global_dialogFragmentTimePicker)
         }
     }
 }

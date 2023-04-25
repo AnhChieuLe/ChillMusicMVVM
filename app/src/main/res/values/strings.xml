@@ -31,6 +31,8 @@
     <string name="help">Hỗ trợ</string>
     <string name="image">Ảnh</string>
     <string name="premium">Premium</string>
+    <string name="cancel">Hủy</string>
+    <string name="delete">Xóa</string>
     <!-- Preference Titles -->
 
     <!-- Messages Preferences -->

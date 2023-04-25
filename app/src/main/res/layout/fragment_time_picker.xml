@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="currentPlayer"
+            type="com.example.chillmusic.viewmodel.CurrentPlayer" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@{currentPlayer.style.backgroundColor}"
+        android:paddingVertical="16dp">
+
+        <include
+            android:id="@+id/picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/countdown_picker"
+            app:currentPlayer="@{currentPlayer}"/>
+
+        <include
+            android:id="@+id/countdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            layout="@layout/count_down"
+            app:currentPlayer="@{currentPlayer}"
+            app:layout_constraintStart_toStartOf="@id/picker"
+            app:layout_constraintEnd_toEndOf="@id/picker"
+            app:layout_constraintTop_toBottomOf="@id/picker" />
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@{currentPlayer.style.itemBackGround}"
+            android:textColor="@{currentPlayer.style.titleColor}"
+            app:layout_constraintTop_toBottomOf="@id/countdown"
+            app:layout_constraintEnd_toStartOf="@id/create"/>
+
+        <Button
+            android:id="@+id/create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/playlist_create"
+            android:layout_marginEnd="24dp"
+            android:backgroundTint="@{currentPlayer.style.contentColor}"
+            android:textColor="@{currentPlayer.style.backgroundColor}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cancel"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
