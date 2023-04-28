@@ -16,6 +16,7 @@ abstract class PlayListDataBase : RoomDatabase() {
     companion object {
         @Volatile
         private var INSTANCE: PlayListDataBase? = null
+        private const val DATABASE_NAME = "playlist_database"
 
         fun getDatabase(context: Context): PlayListDataBase {
             val tempInstance = INSTANCE
@@ -26,7 +27,7 @@ abstract class PlayListDataBase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     PlayListDataBase::class.java,
-                    "user_database"
+                    DATABASE_NAME
                 ).build()
                 INSTANCE = instance
                 return instance

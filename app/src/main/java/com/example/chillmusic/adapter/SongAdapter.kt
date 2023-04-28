@@ -23,12 +23,11 @@ class SongAdapter(
     var onItemClick: (Song) -> Unit = {}
     var onOptionClick: (Song) -> Unit = {}
 
-    var songs: MutableList<Song> = mutableListOf()
+    var songs: List<Song> = listOf()
     set(value) {
         val callback = SongDiffCallback(value, field)
         val result = DiffUtil.calculateDiff(callback)
-        field.clear()
-        field.addAll(value)
+        field = value
         result.dispatchUpdatesTo(this)
     }
 

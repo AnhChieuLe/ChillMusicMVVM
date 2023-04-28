@@ -2,9 +2,6 @@ package com.example.chillmusic.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.media.session.PlaybackStateCompat
-import android.transition.Slide
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +11,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.chillmusic.MainNavDirections
 import com.example.chillmusic.adapter.SongAdapter
-import com.example.chillmusic.constant.log
 import com.example.chillmusic.data.MediaStoreManager
 import com.example.chillmusic.model.PlayList
 import com.example.chillmusic.databinding.FragmentSongsBinding
 import com.example.chillmusic.model.Song
+import com.example.chillmusic.repository.MediaViewModel
 import com.example.chillmusic.viewmodel.CurrentPlayer
 import com.example.chillmusic.service.MusicPlayerService
 
@@ -27,8 +24,9 @@ class FragmentSongs : Fragment() {
     private lateinit var binding: FragmentSongsBinding
     private val adapter: SongAdapter by lazy { SongAdapter(viewModel) }
     private val args: FragmentSongsArgs by navArgs()
-    private val ids by lazy { args.songs ?: longArrayOf() }
-    private val songs get() = MediaStoreManager.getSongs(*ids).toMutableList()
+    private val ids by lazy { args.songs?.toList() ?: listOf() }
+    private val media: MediaViewModel by activityViewModels()
+    private val songs get() = MediaStoreManager.getSongs(ids)
 
     companion object {
         fun newInstance(ids: LongArray): FragmentSongs{

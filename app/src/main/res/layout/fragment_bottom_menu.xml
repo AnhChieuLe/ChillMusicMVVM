@@ -8,14 +8,29 @@
             type="com.example.chillmusic.viewmodel.CurrentPlayer" />
     </data>
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/bottom_menu"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@{currentPlayer.style.backgroundColor}"
-        app:itemTextColor="@{currentPlayer.style.stateList}"
-        app:itemIconTintList="@{currentPlayer.style.stateList}"
-        app:elevation="0dp"
-        app:menu="@menu/bottom_sheet_menu"/>
+        android:background="@drawable/rounded_dialog"
+        android:backgroundTint="@{currentPlayer.style.itemBackGround}">
+
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:id="@+id/BottomSheetDragHandleView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:color="@{currentPlayer.style}"
+            android:visibility="gone"/>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/bottom_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:itemTextColor="@{currentPlayer.style.stateList}"
+            app:itemIconTintList="@{currentPlayer.style.stateList}"
+            app:elevation="0dp"
+            app:menu="@menu/bottom_sheet_menu"
+            android:layout_below="@id/BottomSheetDragHandleView"/>
+    </RelativeLayout>
 
 </layout>

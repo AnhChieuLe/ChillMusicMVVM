@@ -6,19 +6,15 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
-import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Size
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.*
-import kotlinx.parcelize.IgnoredOnParcel
-import kotlinx.parcelize.Parcelize
+import androidx.room.PrimaryKey
+import com.example.chillmusic.data.favorite.Favorite
 import java.io.File
-import java.io.IOException
 
-@Parcelize
 data class Song(
+    @PrimaryKey
     val id: Long = 0L,
     val path: String = "",
     var title: String = "",
@@ -34,28 +30,29 @@ data class Song(
     var composer: String = "",
     var writer: String = "",
     var size: Long = 0,
-) : Parcelable{
-    val uri: Uri get() = ContentUris.withAppendedId(
-        MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL),
-        id
-    )
+    var isFavorite: Boolean = false,
+    var isBlackList: Boolean = false,
+) {
+    val uri: Uri
+        get() = ContentUris.withAppendedId(
+            MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL),
+            id
+        )
 
-    fun loadAlbumArt(contentResolver: ContentResolver){
+    var liveAlbumArt: MutableLiveData<Bitmap> = MutableLiveData()
+    fun loadAlbumArt(contentResolver: ContentResolver) {
         val image = contentResolver.loadThumbnail(uri, Size(128, 128), null)
         liveAlbumArt.postValue(image)
     }
 
-    @IgnoredOnParcel
-    var liveAlbumArt : MutableLiveData<Bitmap> = MutableLiveData()
-
     val largeAlbumArt: Bitmap?
         get() {
-            try{
+            try {
                 val metadata = MediaMetadataRetriever()
                 metadata.setDataSource(path)
                 val byteArray = metadata.embeddedPicture ?: return null
                 return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-            }catch (e: IllegalArgumentException){
+            } catch (e: IllegalArgumentException) {
                 e.printStackTrace()
                 return null
             }
@@ -94,6 +91,11 @@ data class Song(
         composer = metadata.extractMetadata(COMPOSER).toString()
         writer = metadata.extractMetadata(WRITER).toString()
     }
+
+    fun toDataBase(): Favorite {
+        return Favorite(id)
+    }
+
     override fun equals(other: Any?) = (other as Song?)?.id == id
     override fun hashCode() = id.hashCode()
 }

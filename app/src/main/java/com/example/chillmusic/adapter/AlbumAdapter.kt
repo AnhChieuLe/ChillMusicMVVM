@@ -10,7 +10,7 @@ import com.example.chillmusic.model.Album
 import com.example.chillmusic.viewmodel.CurrentPlayer
 
 class AlbumAdapter(val viewModel: CurrentPlayer) : LifecycleAdapter<AlbumAdapter.ViewHolder>(){
-    var data : MutableList<Album> = mutableListOf()
+    var data : List<Album> = listOf()
 
     class ViewHolder(val binding: ItemAlbumBinding) : LifecycleViewHolder(binding.root){
         fun bind(viewModel: CurrentPlayer, album: Album){

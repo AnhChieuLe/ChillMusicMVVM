@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.chillmusic.adapter.SelectionSongAdapter
-import com.example.chillmusic.data.MediaStoreManager
 import com.example.chillmusic.model.PlayList
 import com.example.chillmusic.databinding.FragmentNewPlaylistBinding
+import com.example.chillmusic.repository.MediaViewModel
 import com.example.chillmusic.viewmodel.CurrentPlayer
 import com.example.chillmusic.viewmodel.PlayListViewModel
 
@@ -18,7 +18,8 @@ class FragmentAddPlayList : Fragment(){
     lateinit var binding: FragmentNewPlaylistBinding
     private val currentPlayerViewModel: CurrentPlayer by activityViewModels()
     private val playListViewModel: PlayListViewModel by activityViewModels()
-    private val adapter by lazy { SelectionSongAdapter(MediaStoreManager.songs.toMutableList(), currentPlayerViewModel) }
+    private val mediaViewModel: MediaViewModel by activityViewModels()
+    private val adapter by lazy { SelectionSongAdapter(mediaViewModel.shortMedia, currentPlayerViewModel) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentNewPlaylistBinding.inflate(inflater, container, false)

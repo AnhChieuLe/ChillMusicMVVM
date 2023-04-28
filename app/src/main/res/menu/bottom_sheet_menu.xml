@@ -28,6 +28,26 @@
         android:icon="@drawable/update"/>
 
     <item
+        android:id="@+id/menu_add_to_black_list"
+        android:title="Thêm vào danh sách đen"
+        android:icon="@drawable/hidden"/>
+
+    <item
+        android:id="@+id/menu_remove_black_list"
+        android:title="Xóa khỏi danh sách đen"
+        android:icon="@drawable/hidden"/>
+
+    <item
+        android:id="@+id/menu_add_to_favorite"
+        android:title="Yêu thích"
+        android:icon="@drawable/favorite_empty"/>
+
+    <item
+        android:id="@+id/menu_remove_favorite"
+        android:title="Hủy yêu thích"
+        android:icon="@drawable/favorite_empty"/>
+
+    <item
         android:id="@+id/menu_view_info"
         android:title="Thông tin chi tiết"
         android:icon="@drawable/info"/>

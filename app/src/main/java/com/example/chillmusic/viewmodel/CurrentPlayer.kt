@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 object CurrentPlayer : ViewModel() {
     var playList = MutableLiveData(PlayList())
     val name = MutableLiveData("")
-    var song = MutableLiveData<Song?>(null)
+    var song = MediatorLiveData<Song?>(null)
     val lyric = song.switchMap { setLyric(it) }
     val isPlaying = MutableLiveData(false)
     val volume = MutableLiveData(20)

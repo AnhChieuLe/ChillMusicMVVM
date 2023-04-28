@@ -50,6 +50,8 @@ class MusicStyle(val bitmap: Bitmap? = null) {
 
     val isDarkBackGround: Boolean
         get() = backgroundColor.getDarkness() < 0.5F
+    val isBlackBackGround: Boolean
+        get() = backgroundColor.getDarkness() < 0.02F
 
     companion object {
         fun Int.getDarkness(): Double {

@@ -1,10 +1,13 @@
 package com.example.chillmusic.fragment
 
+import android.graphics.ColorFilter
+import android.graphics.LightingColorFilter
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.activityViewModels
 import com.example.chillmusic.R
@@ -39,6 +42,12 @@ class DialogFragmentTimePicker : BottomSheetDialogFragment() {
             val timeInMillis = (hour + minute + second) * 1000.toLong()
             viewModel.startCountDown(timeInMillis)
             dismiss()
+        }
+
+        viewModel.style.observe(viewLifecycleOwner) {
+            dialog?.window?.navigationBarColor = it.itemBackGround
+            val color = ColorUtils.setAlphaComponent(it.contentColor, 4)
+            dialog?.window?.setBackgroundDrawable(ColorDrawable(color))
         }
     }
 }

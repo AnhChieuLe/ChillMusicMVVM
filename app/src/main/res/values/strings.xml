@@ -24,6 +24,7 @@
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
     <string name="library">Thư viện</string>
     <string name="music">Âm nhạc</string>
     <string name="custom">Tùy chỉnh</string>
@@ -33,9 +34,5 @@
     <string name="premium">Premium</string>
     <string name="cancel">Hủy</string>
     <string name="delete">Xóa</string>
-    <!-- Preference Titles -->
-
-    <!-- Messages Preferences -->
-
-    <!-- Sync Preferences -->
+    <string name="favorite">Yêu thích</string>
 </resources>

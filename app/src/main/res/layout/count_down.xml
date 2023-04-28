@@ -14,7 +14,6 @@
         android:animateLayoutChanges="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="@{currentPlayer.isCountDown ? View.VISIBLE : View.GONE}"
         android:paddingVertical="8dp">
 
         <TextView
@@ -28,7 +27,7 @@
             android:duration_text="@{currentPlayer.timeUntilFinished}"
             android:textColor="@{currentPlayer.style.titleColor}"
             android:background="@drawable/rounded_large_item"
-            android:backgroundTint="@{currentPlayer.style.itemBackGround}"
+            android:backgroundTint="@{currentPlayer.style.backgroundColor}"
             android:paddingVertical="4dp"
             android:paddingHorizontal="16dp"/>
 
@@ -42,7 +41,7 @@
             app:layout_constraintTop_toTopOf="@id/tv_countdown"
             app:layout_constraintBottom_toBottomOf="@id/tv_countdown"
             app:layout_constraintStart_toEndOf="@id/tv_countdown"
-            android:backgroundTint="@{currentPlayer.style.itemBackGround}"
+            android:backgroundTint="@{currentPlayer.style.backgroundColor}"
             android:textColor="@{currentPlayer.style.titleColor}"
             android:layout_marginStart="16dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>

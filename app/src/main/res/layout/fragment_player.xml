@@ -46,11 +46,11 @@
             android:bitmap="@{currentPlayer.song.largeAlbumArt}"
             android:contentDescription="@{currentPlayer.song.title}"
             android:outlineSpotShadowColor="@{currentPlayer.style.itemBackGround}"
-            app:strokeWidth="3dp"
-            app:strokeColor="@{currentPlayer.style.itemBackGround}"
             android:scaleType="centerCrop"
             android:src="@drawable/avatar"
-            app:shapeAppearanceOverlay="@style/roundedLargeImageView" />
+            app:shapeAppearanceOverlay="@style/roundedLargeImageView"
+            app:strokeColor="@{currentPlayer.style.itemBackGround}"
+            app:strokeWidth="3dp" />
 
         <TextView
             android:id="@+id/tv_title"

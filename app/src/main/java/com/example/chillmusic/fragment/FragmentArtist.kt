@@ -6,17 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.example.chillmusic.adapter.AlbumAdapter
 import com.example.chillmusic.adapter.ArtistAdapter
-import com.example.chillmusic.data.MediaStoreManager
-import com.example.chillmusic.databinding.FragmentAlbumsBinding
 import com.example.chillmusic.databinding.FragmentArtistBinding
+import com.example.chillmusic.repository.MediaViewModel
 import com.example.chillmusic.viewmodel.CurrentPlayer
 
 class FragmentArtist : Fragment() {
     private lateinit var binding: FragmentArtistBinding
     private val viewModel : CurrentPlayer by activityViewModels()
     private val adapter: ArtistAdapter by lazy { ArtistAdapter(viewModel) }
+    private val mediaViewModel: MediaViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentArtistBinding.inflate(inflater, container, false)
@@ -27,13 +26,13 @@ class FragmentArtist : Fragment() {
     }
 
     private fun setAdapter() {
-        adapter.data = MediaStoreManager.artists.toMutableList()
+        adapter.data = mediaViewModel.artists
         binding.recyclerView.adapter = adapter
     }
 
     private fun observer(){
-        MediaStoreManager.allSong.observe(viewLifecycleOwner){
-            adapter.data = MediaStoreManager.artists.toMutableList()
+        mediaViewModel.songs.observe(viewLifecycleOwner){
+            adapter.data = mediaViewModel.artists
         }
     }
 }

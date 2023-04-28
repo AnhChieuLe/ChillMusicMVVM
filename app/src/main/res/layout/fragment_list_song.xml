@@ -19,17 +19,25 @@
             android:color="@{currentPlayer.style}"
             android:background="@android:color/transparent"/>
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/refresh"
+<!--        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--            android:id="@+id/refresh"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_below="@id/tab_layout">-->
+<!--            <androidx.viewpager2.widget.ViewPager2-->
+<!--                android:id="@+id/viewpager"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:paddingHorizontal="8dp"-->
+<!--                android:layout_below="@id/tab_layout"/>-->
+<!--        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/tab_layout">
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                android:paddingHorizontal="8dp" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            android:layout_marginTop="8dp"
+            android:paddingHorizontal="8dp"
+            android:layout_below="@id/tab_layout"/>
     </RelativeLayout>
 </layout>

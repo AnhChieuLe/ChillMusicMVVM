@@ -21,6 +21,7 @@ import com.example.chillmusic.databinding.ActivityMainBinding
 import com.example.chillmusic.enums.Sort
 import com.example.chillmusic.enums.SortType
 import com.example.chillmusic.library.MusicStyle.Companion.getDarkness
+import com.example.chillmusic.repository.MediaViewModel
 import com.example.chillmusic.viewmodel.CurrentPlayer
 
 class MainActivity : AppCompatActivity() {
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_main_host) as NavHostFragment
         navHostFragment.navController
     }
+    private val mediaViewModel: MediaViewModel by viewModels()
 
     companion object {
         const val ACTION_EXPAND = "ACTION_EXPAND"
@@ -87,13 +89,13 @@ class MainActivity : AppCompatActivity() {
         val listener = PopupMenu.OnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.menu_setting       -> startActivity(Intent(this, SettingsActivity::class.java))
-                R.id.sort_by_name       -> MediaStoreManager.setSortedValue(Sort.BY_NAME)
-                R.id.sort_by_duration   -> MediaStoreManager.setSortedValue(Sort.BY_DURATION)
-                R.id.sort_by_date       -> MediaStoreManager.setSortedValue(Sort.BY_DATE)
-                R.id.sort_by_quality    -> MediaStoreManager.setSortedValue(Sort.BY_QUALITY)
-                R.id.sort_by_size       -> MediaStoreManager.setSortedValue(Sort.BY_SIZE)
-                R.id.sort_asc           -> MediaStoreManager.setSortedType(SortType.INCREASING)
-                R.id.sort_des           -> MediaStoreManager.setSortedType(SortType.DECREASING)
+                R.id.sort_by_name       -> mediaViewModel.setSort(Sort.BY_NAME)
+                R.id.sort_by_duration   -> mediaViewModel.setSort(Sort.BY_DURATION)
+                R.id.sort_by_date       -> mediaViewModel.setSort(Sort.BY_DATE)
+                R.id.sort_by_quality    -> mediaViewModel.setSort(Sort.BY_QUALITY)
+                R.id.sort_by_size       -> mediaViewModel.setSort(Sort.BY_SIZE)
+                R.id.sort_asc           -> mediaViewModel.setSortType(SortType.INCREASING)
+                R.id.sort_des           -> mediaViewModel.setSortType(SortType.DECREASING)
             }
             true
         }

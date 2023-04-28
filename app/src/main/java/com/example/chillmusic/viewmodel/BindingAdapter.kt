@@ -1,5 +1,6 @@
 package com.example.chillmusic.viewmodel
 
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Paint
 import android.view.View
@@ -9,6 +10,7 @@ import com.example.chillmusic.R
 import com.example.chillmusic.enums.Navigation
 import com.example.chillmusic.library.MusicStyle
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetDragHandleView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.*
@@ -144,6 +146,12 @@ fun setNumberPickerValue(numberPicker: NumberPicker, max: Int?){
     max ?: return
     numberPicker.minValue = 0
     numberPicker.maxValue = max
+}
+
+@BindingAdapter("android:color")
+fun setColor(bottomSheetDragHandleView: BottomSheetDragHandleView, style: MusicStyle?){
+    style ?: return
+    bottomSheetDragHandleView.imageTintList = style.stateList
 }
 
 private fun getStringDuration(millisecond: Long?): String {

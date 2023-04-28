@@ -10,21 +10,31 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingHorizontal="8dp"
-        android:background="@{currentPlayer.style.backgroundColor}">
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="8dp"
+        android:background="@drawable/rounded_dialog"
+        android:backgroundTint="@{currentPlayer.style.backgroundColor}">
+
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:id="@+id/BottomSheetDragHandleView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:color="@{currentPlayer.style}"/>
+
         <include
             android:id="@+id/item_add"
             layout="@layout/item_playlist_add"
             app:style="@{currentPlayer.style}"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_below="@id/BottomSheetDragHandleView"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcv_playlist"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@id/item_add"
             android:layout_marginTop="24dp"
             tools:listitem="@layout/item_playlist"

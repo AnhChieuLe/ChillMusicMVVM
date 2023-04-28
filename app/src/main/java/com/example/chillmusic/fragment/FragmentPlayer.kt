@@ -2,7 +2,6 @@ package com.example.chillmusic.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,17 +10,21 @@ import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.example.chillmusic.MainNavDirections
 import com.example.chillmusic.R
 import com.example.chillmusic.adapter.SongAdapter
+import com.example.chillmusic.constant.log
 import com.example.chillmusic.data.MediaStoreManager
+import com.example.chillmusic.data.favorite.FavoriteDatabase
 import com.example.chillmusic.databinding.FragmentPlayerBinding
 import com.example.chillmusic.enums.PlayerState
+import com.example.chillmusic.repository.FavoriteRepository
 import com.example.chillmusic.service.ACTION_SEEK_TO
 import com.example.chillmusic.service.MusicPlayerService
 import com.example.chillmusic.viewmodel.CurrentPlayer
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 class FragmentPlayer : Fragment() {
     private lateinit var binding : FragmentPlayerBinding
@@ -79,7 +82,8 @@ class FragmentPlayer : Fragment() {
         }
 
         viewModel.playList.observe(viewLifecycleOwner){
-            songAdapter.songs = MediaStoreManager.getSongs(*it.songs.toLongArray()).toMutableList()
+            val songs = MediaStoreManager.getSongs(it.songs)
+            songAdapter.songs = songs
         }
     }
 
@@ -115,6 +119,18 @@ class FragmentPlayer : Fragment() {
 
         binding.extensions.timer.setOnClickListener {
             findNavController().navigate(R.id.action_global_dialogFragmentTimePicker)
+        }
+
+        binding.controller.favorite.setOnClickListener {
+            val db = viewModel.song.value?.toDataBase() ?: return@setOnClickListener
+            val dao = FavoriteDatabase.getDatabase(requireContext()).favoriteDao()
+            val favoriteRepo = FavoriteRepository(dao)
+            MainScope().launch {
+                if(viewModel.song.value?.isFavorite == true)
+                    favoriteRepo.insert(db)
+                else
+                    favoriteRepo.delete(db)
+            }
         }
     }
 }

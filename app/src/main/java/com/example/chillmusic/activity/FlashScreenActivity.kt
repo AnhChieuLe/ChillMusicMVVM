@@ -17,8 +17,6 @@ import com.example.chillmusic.model.Song
 import com.example.chillmusic.viewmodel.CurrentPlayer
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 
 
 class FlashScreenActivity : AppCompatActivity() {
@@ -26,10 +24,8 @@ class FlashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         CurrentPlayer.defaultStyle = MusicStyle(BitmapFactory.decodeResource(resources, R.drawable.avatar))
         requestPermission {
-            MediaStoreManager.refreshMediaStore(application) {
-                MediaStoreManager.loadSong(application)
-                MediaStoreManager.loadAlbum()
-                MediaStoreManager.loadArtist()
+            refreshMediaStore {
+                MediaStoreManager.loadData(application.contentResolver)
                 startActivity(Intent(this@FlashScreenActivity, MainActivity::class.java))
                 finish()
             }
@@ -70,6 +66,13 @@ class FlashScreenActivity : AppCompatActivity() {
         contentResolver.update(contentUri, getPendingValues(false), null, null)
 
         log("Number of song updated: $rowsUpdated")
+    }
+
+    private fun refreshMediaStore(callback: () -> Unit) {
+        val paths = arrayOf("/storage/emulated/0/")
+        MediaScannerConnection.scanFile(application, paths, null) { path, uri ->
+            callback()
+        }
     }
 
     private fun requestPermission(actionGranted: () -> Unit = {}) {

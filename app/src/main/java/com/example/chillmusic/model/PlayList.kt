@@ -9,10 +9,12 @@ import java.util.*
 
 @Entity(tableName = "playlist_table")
 data class PlayList(
-    @PrimaryKey
     val name: String = "",
     val songs: MutableList<Long> = mutableListOf()
 ){
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0
+
     override fun toString(): String {
         return name
     }
@@ -34,7 +36,7 @@ data class PlayList(
     }
 
     fun getNext(song: Song?, navigation: Navigation) : Song?{
-        val list = MediaStoreManager.getSongs(*songs.toLongArray()).toMutableList()
+        val list = MediaStoreManager.getSongs(songs)
         val currentPosition = list.indexOf(song)
         val isEndOfList = currentPosition == list.lastIndex
 
@@ -61,7 +63,7 @@ data class PlayList(
     }
 
     fun previous(song: Song?, navigation: Navigation): Song?{
-        val list = MediaStoreManager.getSongs(*songs.toLongArray()).toMutableList()
+        val list = MediaStoreManager.getSongs(songs)
         val previous: Song?
 
         val currentPosition = list.indexOf(song)

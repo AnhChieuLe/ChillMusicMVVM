@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
@@ -40,7 +41,14 @@ class DialogFragmentDetail : DialogFragment() {
         val song = MediaStoreManager.getSongs(args.id)
         song?.extractMetaData()
         binding.song = song
-
+        observer()
         return binding.root
+    }
+
+    fun observer(){
+        viewModel.style.observe(viewLifecycleOwner) {
+            val color = ColorUtils.setAlphaComponent(it.contentColor, 4)
+            dialog?.window?.setBackgroundDrawable(ColorDrawable(color))
+        }
     }
 }

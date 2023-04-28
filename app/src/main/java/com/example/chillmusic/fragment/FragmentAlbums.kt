@@ -9,14 +9,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.chillmusic.MainNavDirections
 import com.example.chillmusic.adapter.AlbumAdapter
-import com.example.chillmusic.data.MediaStoreManager
 import com.example.chillmusic.databinding.FragmentAlbumsBinding
+import com.example.chillmusic.repository.MediaViewModel
 import com.example.chillmusic.viewmodel.CurrentPlayer
 
 class FragmentAlbums : Fragment() {
     private lateinit var binding: FragmentAlbumsBinding
     private val viewModel : CurrentPlayer by activityViewModels()
     private val adapter: AlbumAdapter by lazy { AlbumAdapter(viewModel) }
+    private val mediaViewModel: MediaViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentAlbumsBinding.inflate(inflater, container, false)
@@ -27,7 +28,7 @@ class FragmentAlbums : Fragment() {
     }
 
     private fun setAdapter() {
-        adapter.data = MediaStoreManager.albums.toMutableList()
+        adapter.data = mediaViewModel.albums
         binding.recyclerView.adapter = adapter
         adapter.setOnItemClickListener {
             val action = MainNavDirections.openAlbum(it)
@@ -36,8 +37,8 @@ class FragmentAlbums : Fragment() {
     }
 
     private fun observer(){
-        MediaStoreManager.allSong.observe(viewLifecycleOwner){
-            adapter.data = MediaStoreManager.albums.toMutableList()
+        mediaViewModel.songs.observe(viewLifecycleOwner){
+            adapter.data = mediaViewModel.albums
         }
     }
 }

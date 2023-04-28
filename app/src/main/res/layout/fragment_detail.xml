@@ -15,7 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@{currentPlayer.style.backgroundColor}"
+        android:background="@drawable/rounded_large_item"
+        android:backgroundTint="@{currentPlayer.style.itemBackGround}"
         android:padding="8dp">
 
         <TableRow

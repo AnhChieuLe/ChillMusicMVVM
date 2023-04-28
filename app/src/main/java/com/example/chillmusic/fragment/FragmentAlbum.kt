@@ -13,6 +13,7 @@ import com.example.chillmusic.adapter.SongAdapter
 import com.example.chillmusic.data.MediaStoreManager
 import com.example.chillmusic.databinding.FragmentAlbumBinding
 import com.example.chillmusic.model.Album
+import com.example.chillmusic.repository.MediaViewModel
 import com.example.chillmusic.viewmodel.CurrentPlayer
 
 class FragmentAlbum : Fragment(){
@@ -20,9 +21,8 @@ class FragmentAlbum : Fragment(){
     private val currentPlayer: CurrentPlayer by activityViewModels()
     private val adapter by lazy { SongAdapter(currentPlayer) }
     private val args: FragmentAlbumArgs by navArgs()
-    private val album : Album by lazy {
-        args.album
-    }
+    private val mediaViewModel: MediaViewModel by activityViewModels()
+    private val album : Album by lazy { args.album }
 
     companion object {
         fun newInstance(album: Album?): FragmentAlbum{
@@ -44,8 +44,8 @@ class FragmentAlbum : Fragment(){
     }
 
     private fun setListSong(){
-        val ids = album.ids.toLongArray()
-        val songs = MediaStoreManager.getSongs(*ids)
+        val ids = album.ids
+        val songs = MediaStoreManager.getSongs(ids)
         adapter.songs = songs.toMutableList()
         binding.rcvSongs.adapter = adapter
     }

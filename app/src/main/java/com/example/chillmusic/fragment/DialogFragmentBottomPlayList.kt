@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.chillmusic.R
 import com.example.chillmusic.adapter.PlayListAdapter
@@ -61,9 +62,12 @@ class DialogFragmentBottomPlayList : BottomSheetDialogFragment(){
     }
 
     private fun setEvent(){
-        binding.itemAdd.root.visibility = View.GONE
-//        binding.itemAdd.root.setOnClickListener {
-//            findNavController().navigate(R.id.action_fragmentBottomPlayList_to_fragmentAddPlayList)
-//        }
+        binding.itemAdd.root.setOnClickListener {
+            findNavController().navigate(R.id.open_playlist_add)
+        }
+
+        viewModel.style.observe(viewLifecycleOwner) {
+            dialog?.window?.navigationBarColor = it.backgroundColor
+        }
     }
 }
