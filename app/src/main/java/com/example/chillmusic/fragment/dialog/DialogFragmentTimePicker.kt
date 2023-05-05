@@ -1,4 +1,4 @@
-package com.example.chillmusic.fragment
+package com.example.chillmusic.fragment.dialog
 
 import android.graphics.ColorFilter
 import android.graphics.LightingColorFilter

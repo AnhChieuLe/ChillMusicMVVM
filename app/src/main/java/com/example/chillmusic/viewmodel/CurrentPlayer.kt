@@ -3,19 +3,18 @@ package com.example.chillmusic.viewmodel
 import android.os.CountDownTimer
 import androidx.lifecycle.*
 import com.example.chillmusic.api.MusicMatchAPI
-import com.example.chillmusic.constant.log
-import com.example.chillmusic.model.PlayList
+import com.example.chillmusic.api.model.Track
 import com.example.chillmusic.enums.Navigation
 import com.example.chillmusic.library.MusicStyle
+import com.example.chillmusic.model.PlayList
 import com.example.chillmusic.model.Song
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 object CurrentPlayer : ViewModel() {
     var playList = MutableLiveData(PlayList())
     val name = MutableLiveData("")
     var song = MediatorLiveData<Song?>(null)
-    val lyric = song.switchMap { setLyric(it) }
+    val lyric = MediatorLiveData("")
     val isPlaying = MutableLiveData(false)
     val volume = MutableLiveData(20)
     val progress = MutableLiveData(0)
@@ -35,24 +34,6 @@ object CurrentPlayer : ViewModel() {
                 postValue(mapper(it))
             }
         }
-    }
-
-    private fun setLyric(song: Song?) : LiveData<String>{
-        val lyric = MutableLiveData("Đang tải lời bài hát")
-        song ?: return lyric
-        val handler = CoroutineExceptionHandler { _, throwable ->
-            throwable.printStackTrace()
-        }
-
-        viewModelScope.launch(handler) {
-            val response = MusicMatchAPI.apiService.getLyric(
-                track = song.title,
-                artist = song.artist
-            )
-            val lyricResponse = response.body() ?: return@launch
-            lyric.postValue(lyricResponse.message.body.lyrics.body)
-        }
-        return lyric
     }
 
     fun start() {

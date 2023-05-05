@@ -22,6 +22,15 @@ import java.util.SortedSet
 object MediaStoreManager {
     val allSong = MutableLiveData<Set<Song>>(setOf())
     val songs get() = allSong.value?.toList() ?: listOf()
+    val albums: List<Album>
+        get() = songs.groupBy { it.albumId }.map {
+            Album(
+                id = it.key,
+                name = it.value[0].album,
+                ids = it.value.map { song -> song.id },
+                albumArt = it.value[0].liveAlbumArt
+            )
+        }
 
     fun loadData(resolver: ContentResolver) {
         val projection = arrayOf(
@@ -114,6 +123,10 @@ object MediaStoreManager {
 
     fun getSongs(id: Long): Song? {
         return songs.firstOrNull { it.id == id }
+    }
+
+    fun getAlbum(id: Long): Album?{
+        return albums.firstOrNull { it.id == id }
     }
 
     operator fun MutableLiveData<SortedSet<Song>>.plusAssign(values: Song) {

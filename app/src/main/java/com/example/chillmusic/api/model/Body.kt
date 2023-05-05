@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Body(
     @SerializedName("track_list")
-    val tracks: List<APIResponse> = listOf(),
+    val tracks: List<TrackContainer> = listOf(),
     @SerializedName("lyrics")
-    val lyrics: Lyric,
+    val lyrics: Lyric = Lyric(0, ""),
 )

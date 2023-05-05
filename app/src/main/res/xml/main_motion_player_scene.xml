@@ -369,7 +369,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             app:layout_constraintBottom_toBottomOf="@id/container"
-            app:layout_constraintEnd_toStartOf="@+id/img_clear"
+            app:layout_constraintStart_toEndOf="@id/container"
             app:layout_constraintTop_toTopOf="@id/container">
             <PropertySet
                 android:alpha="0"/>
@@ -380,7 +380,7 @@
             android:layout_height="40dp"
             android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="@id/container"
-            app:layout_constraintEnd_toEndOf="@id/container"
+            app:layout_constraintStart_toEndOf="@id/container"
             app:layout_constraintTop_toTopOf="@id/container">
             <PropertySet
                 android:alpha="0"/>
@@ -650,7 +650,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             app:layout_constraintBottom_toBottomOf="@id/container"
-            app:layout_constraintEnd_toStartOf="@+id/img_clear"
+            app:layout_constraintStart_toEndOf="@id/container"
             app:layout_constraintTop_toTopOf="@id/container">
             <PropertySet
                 android:alpha="0"/>
@@ -661,7 +661,7 @@
             android:layout_height="40dp"
             android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="@id/container"
-            app:layout_constraintEnd_toEndOf="@id/container"
+            app:layout_constraintStart_toEndOf="@id/container"
             app:layout_constraintTop_toTopOf="@id/container">
             <PropertySet
                 android:alpha="0"/>

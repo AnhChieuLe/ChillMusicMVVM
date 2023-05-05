@@ -1,4 +1,4 @@
-package com.example.chillmusic.fragment
+package com.example.chillmusic.fragment.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,7 +24,7 @@ class DialogFragmentBottomPlayList : BottomSheetDialogFragment(){
     }
 
     companion object {
-        fun newInstance(id: Long): DialogFragmentBottomPlayList{
+        fun newInstance(id: Long): DialogFragmentBottomPlayList {
             val args = Bundle()
             args.putLong("id", id)
             val fragment = DialogFragmentBottomPlayList()

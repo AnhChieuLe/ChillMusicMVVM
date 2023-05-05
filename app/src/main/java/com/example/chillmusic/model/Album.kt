@@ -13,4 +13,6 @@ data class Album(
 ) : Serializable{
     val style: MusicStyle get() = MusicStyle(albumArt.value)
     val numOfSong: Int get() = ids.size
+
+    fun toPlayList() = PlayList(name, ids.toMutableList())
 }

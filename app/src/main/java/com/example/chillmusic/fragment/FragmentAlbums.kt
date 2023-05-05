@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.chillmusic.MainNavDirections
+import com.example.chillmusic.R
 import com.example.chillmusic.adapter.AlbumAdapter
 import com.example.chillmusic.databinding.FragmentAlbumsBinding
 import com.example.chillmusic.repository.MediaViewModel
@@ -31,7 +32,9 @@ class FragmentAlbums : Fragment() {
         adapter.data = mediaViewModel.albums
         binding.recyclerView.adapter = adapter
         adapter.setOnItemClickListener {
-            val action = MainNavDirections.openAlbum(it)
+//            val action = MainNavDirections.openAlbum(it)
+//            findNavController().navigate(action)
+            val action = MainNavDirections.openFragmentPlaylist(it.id)
             findNavController().navigate(action)
         }
     }

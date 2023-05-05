@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_main_host) as NavHostFragment
         navHostFragment.navController
     }
-    private val mediaViewModel: MediaViewModel by viewModels()
 
     companion object {
         const val ACTION_EXPAND = "ACTION_EXPAND"
@@ -58,50 +57,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setEvent(){
-        binding.imgMenu.setOnClickListener {
-            showPopup(it)
-        }
-
-        binding.imgNavigation.setOnClickListener {
-            binding.drawerLayout.openDrawer(GravityCompat.START)
-        }
-
-        binding.navigation.setNavigationItemSelectedListener {
-            when(it.itemId){
-                R.id.navigation_music -> {}
-                R.id.navigation_setting -> {
-                    val intent = Intent(this, SettingsActivity::class.java)
-                    startActivity(intent)
-                }
-            }
-            true
-        }
-
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            when(destination.id){
-                R.id.fragmentAlbum -> binding.appbar.visibility = View.GONE
-                else -> binding.appbar.visibility = View.VISIBLE
-            }
-        }
-    }
 
-    private fun showPopup(view: View) {
-        val listener = PopupMenu.OnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.menu_setting       -> startActivity(Intent(this, SettingsActivity::class.java))
-                R.id.sort_by_name       -> mediaViewModel.setSort(Sort.BY_NAME)
-                R.id.sort_by_duration   -> mediaViewModel.setSort(Sort.BY_DURATION)
-                R.id.sort_by_date       -> mediaViewModel.setSort(Sort.BY_DATE)
-                R.id.sort_by_quality    -> mediaViewModel.setSort(Sort.BY_QUALITY)
-                R.id.sort_by_size       -> mediaViewModel.setSort(Sort.BY_SIZE)
-                R.id.sort_asc           -> mediaViewModel.setSortType(SortType.INCREASING)
-                R.id.sort_des           -> mediaViewModel.setSortType(SortType.DECREASING)
-            }
-            true
         }
-        PopupMenu(this, view, Gravity.END, R.style.MyPopupMenu, R.style.MyPopupMenu).apply {
-            inflate(R.menu.toolbar_menu)
-            setOnMenuItemClickListener(listener)
-        }.show()
     }
 }

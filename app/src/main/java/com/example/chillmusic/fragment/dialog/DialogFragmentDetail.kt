@@ -1,7 +1,5 @@
-package com.example.chillmusic.fragment
+package com.example.chillmusic.fragment.dialog
 
-import android.app.Dialog
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,7 +13,6 @@ import com.example.chillmusic.R
 import com.example.chillmusic.data.MediaStoreManager
 import com.example.chillmusic.databinding.FragmentDetailBinding
 import com.example.chillmusic.viewmodel.CurrentPlayer
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class DialogFragmentDetail : DialogFragment() {
     private lateinit var binding: FragmentDetailBinding
@@ -23,7 +20,7 @@ class DialogFragmentDetail : DialogFragment() {
     private val args: DialogFragmentDetailArgs by navArgs()
 
     companion object {
-        fun newInstance(id: Long): DialogFragmentDetail{
+        fun newInstance(id: Long): DialogFragmentDetail {
             val args = Bundle()
             args.putLong("id", id)
             val fragment = DialogFragmentDetail()

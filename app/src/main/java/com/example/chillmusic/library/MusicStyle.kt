@@ -1,10 +1,13 @@
 package com.example.chillmusic.library
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import androidx.core.graphics.ColorUtils
 import androidx.palette.graphics.Palette
+import com.example.chillmusic.R
 import com.example.chillmusic.constant.log
 import kotlin.math.roundToInt
 
@@ -50,10 +53,16 @@ class MusicStyle(val bitmap: Bitmap? = null) {
 
     val isDarkBackGround: Boolean
         get() = backgroundColor.getDarkness() < 0.5F
-    val isBlackBackGround: Boolean
-        get() = backgroundColor.getDarkness() < 0.02F
 
     companion object {
+        fun create(context: Context, bitmap: Bitmap?): MusicStyle{
+            val default = BitmapFactory.decodeResource(context.resources, R.drawable.avatar)
+            return if(bitmap == null)
+                MusicStyle(default)
+            else
+                MusicStyle(bitmap)
+        }
+
         fun Int.getDarkness(): Double {
             return ColorUtils.calculateLuminance(this)
         }

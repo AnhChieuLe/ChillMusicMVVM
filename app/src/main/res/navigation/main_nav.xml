@@ -19,13 +19,14 @@
             app:argType="long[]"
             app:nullable="true" />
     </fragment>
+
     <fragment
         android:id="@+id/fragmentAddPlayList"
         android:name="com.example.chillmusic.fragment.FragmentAddPlayList"
         android:label="FragmentAddPlayList" />
     <dialog
         android:id="@+id/fragmentBottomMenu"
-        android:name="com.example.chillmusic.fragment.DialogFragmentBottomMenu"
+        android:name="com.example.chillmusic.fragment.dialog.DialogFragmentBottomMenu"
         android:label="FragmentBottomMenu" >
         <argument
             android:name="id"
@@ -33,7 +34,7 @@
     </dialog>
     <dialog
         android:id="@+id/fragmentBottomPlayList"
-        android:name="com.example.chillmusic.fragment.DialogFragmentBottomPlayList"
+        android:name="com.example.chillmusic.fragment.dialog.DialogFragmentBottomPlayList"
         android:label="FragmentBottomPlayList" >
         <argument
             android:name="id"
@@ -41,7 +42,7 @@
     </dialog>
     <dialog
         android:id="@+id/fragmentDetail"
-        android:name="com.example.chillmusic.fragment.DialogFragmentDetail"
+        android:name="com.example.chillmusic.fragment.dialog.DialogFragmentDetail"
         android:label="FragmentDetail" >
         <argument
             android:name="id"
@@ -76,9 +77,20 @@
         app:destination="@id/fragmentAlbum" />
     <dialog
         android:id="@+id/dialogFragmentTimePicker"
-        android:name="com.example.chillmusic.fragment.DialogFragmentTimePicker"
+        android:name="com.example.chillmusic.fragment.dialog.DialogFragmentTimePicker"
         android:label="DialogFragmentTimePicker" />
     <action
         android:id="@+id/action_global_dialogFragmentTimePicker"
         app:destination="@id/dialogFragmentTimePicker" />
+    <fragment
+        android:id="@+id/fragmentPlaylist"
+        android:name="com.example.chillmusic.fragment.FragmentPlaylist"
+        android:label="FragmentPlaylist">
+        <argument
+            android:name="id"
+            app:argType="long" />
+    </fragment>
+    <action
+        android:id="@+id/open_fragmentPlaylist"
+        app:destination="@id/fragmentPlaylist" />
 </navigation>

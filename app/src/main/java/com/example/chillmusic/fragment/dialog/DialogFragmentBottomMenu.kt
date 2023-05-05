@@ -1,4 +1,4 @@
-package com.example.chillmusic.fragment
+package com.example.chillmusic.fragment.dialog
 
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -35,7 +35,7 @@ class DialogFragmentBottomMenu : BottomSheetDialogFragment() {
     private val song by lazy { MediaStoreManager.getSongs(args.id) }
 
     companion object {
-        fun newInstance(id: Long): DialogFragmentBottomMenu{
+        fun newInstance(id: Long): DialogFragmentBottomMenu {
             val args = Bundle()
             args.putLong("id", id)
             val fragment = DialogFragmentBottomMenu()

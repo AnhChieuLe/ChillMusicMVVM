@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="album"
+            type="com.example.chillmusic.model.Album" />
+    </data>
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/motion_header"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutDescription="@xml/fragment_playlist_scene_header">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/album_art"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/avatar"
+            android:scaleType="centerCrop"
+            android:bitmap="@{album.albumArt}"
+            app:shapeAppearanceOverlay="@style/roundedLargeImageView"/>
+
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rounded_item"
+            android:backgroundTint="@{album.style.itemBackGround}"/>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@{album.style.contentColor}"
+            android:text="@{album.name}"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:padding="4dp"
+            android:maxLines="1" />
+
+        <TextView
+            android:id="@+id/tv_num_of_song"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@{album.style.contentColor}"
+            android:text='@{album.numOfSong + " bài hát"}'
+            android:maxLines="1"
+            android:textSize="16sp"
+            android:padding="4dp"
+            android:textStyle="bold"/>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+</layout>

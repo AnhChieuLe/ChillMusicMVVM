@@ -33,8 +33,7 @@
             android:name=".activity.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings"
-            android:theme="@style/Setting"/>
-
+            android:theme="@style/Setting" />
         <activity
             android:name=".activity.FlashScreenActivity"
             android:exported="true"
