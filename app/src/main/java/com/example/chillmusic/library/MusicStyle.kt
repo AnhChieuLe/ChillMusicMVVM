@@ -9,6 +9,7 @@ import androidx.core.graphics.ColorUtils
 import androidx.palette.graphics.Palette
 import com.example.chillmusic.R
 import com.example.chillmusic.constant.log
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 class MusicStyle(val bitmap: Bitmap? = null) {
@@ -77,9 +78,9 @@ class MusicStyle(val bitmap: Bitmap? = null) {
             val factorValue = 0.05F
             val factor: (Int) -> Int = {
                 val addValue = if(dark < 0.5F)
-                    (it - 0) * factorValue + 10
+                    abs((128 - it)) * factorValue + 8
                 else
-                    (it - 255) * factorValue - 8
+                    -abs((it - 255)) * factorValue - 8
 
                 it + addValue.roundToInt()
             }

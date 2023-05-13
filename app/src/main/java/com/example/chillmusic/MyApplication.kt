@@ -3,17 +3,23 @@ package com.example.chillmusic
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import com.example.chillmusic.model.PlayList
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+import com.example.chillmusic.network.api.MusixMatchAPI
+import com.example.chillmusic.constant.log
+import com.example.chillmusic.network.crawl.MusixMatch
+import com.example.chillmusic.network.crawl.NhacCuaTui
+import com.example.chillmusic.enums.LyricsSource
+import com.example.chillmusic.settings.Settings
+import com.example.chillmusic.viewmodel.CurrentPlayer
 
 
 const val CHANNEL_MEDIA_PLAYER = "CHANNEL_MEDIA_PLAYER"
 
 class MyApplication() : Application() {
+    private val settings: Settings by lazy { Settings(this) }
+
     override fun onCreate() {
         super.onCreate()
+        settings.register()
         createNotificationChanel()
     }
 

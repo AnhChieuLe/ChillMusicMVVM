@@ -11,27 +11,28 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.core.widget.NestedScrollView
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/scroll_tracks"
-            android:scrollbars="none"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:scrollbars="none">
             <TextView
+                android:id="@+id/tv_lyrics"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="0.85"
+                android:alpha="0.8"
                 android:lineSpacingMultiplier="1.4"
                 android:text="@{currentPlayer.lyric}"
                 android:textAlignment="viewStart"
                 android:textColor="@{currentPlayer.style.contentColor}"
                 android:textSize="16sp"
                 android:textStyle="bold" />
-        </androidx.core.widget.NestedScrollView>
+        </ScrollView>
 
-        <androidx.core.widget.NestedScrollView
+        <ScrollView
             android:id="@+id/scroll_tracks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,6 +48,6 @@
                 tools:listitem="@layout/item_track"
                 android:paddingBottom="16dp"
                 android:paddingTop="8dp"/>
-        </androidx.core.widget.NestedScrollView>
+        </ScrollView>
     </RelativeLayout>
 </layout>

@@ -2,25 +2,37 @@ package com.example.chillmusic.viewmodel
 
 import android.os.CountDownTimer
 import androidx.lifecycle.*
-import com.example.chillmusic.api.MusicMatchAPI
-import com.example.chillmusic.api.model.Track
+import com.example.chillmusic.network.api.MusixMatchAPI
+import com.example.chillmusic.constant.log
+import com.example.chillmusic.network.crawl.LyricsResource
+import com.example.chillmusic.network.crawl.NhacCuaTui
+import com.example.chillmusic.network.crawl.model.Track
 import com.example.chillmusic.enums.Navigation
 import com.example.chillmusic.library.MusicStyle
 import com.example.chillmusic.model.PlayList
 import com.example.chillmusic.model.Song
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 object CurrentPlayer : ViewModel() {
     var playList = MutableLiveData(PlayList())
     val name = MutableLiveData("")
     var song = MediatorLiveData<Song?>(null)
-    val lyric = MediatorLiveData("")
+
+    lateinit var lyricsSource: LyricsResource
+    val tracks = song.switchMap { getTracks(it) }
+    val trackIndex = MediatorLiveData(0)
+    var lyric = MediatorLiveData("")
+
     val isPlaying = MutableLiveData(false)
     val volume = MutableLiveData(20)
     val progress = MutableLiveData(0)
     val duration = MutableLiveData(0)
     val navigation = MutableLiveData(Navigation.NORMAL)
     val isTouching = MutableLiveData(false)
+
     var defaultStyle = MusicStyle()
     val isActive = song.map { it != null }
     val style = song.mapWithDefault(defaultStyle) {
@@ -28,11 +40,62 @@ object CurrentPlayer : ViewModel() {
         else    MusicStyle(it.liveAlbumArt.value)
     }
 
+    init {
+        trackIndex.addSource(tracks){
+            setLyrics(it)
+        }
+        lyric.addSource(trackIndex){
+            if(tracks.value?.isEmpty() == true || tracks.value == null) return@addSource
+
+            val track = tracks.value?.get(it) ?: return@addSource
+            setLyrics(track)
+        }
+    }
+
     private fun LiveData<Song?>.mapWithDefault(defaultValue: MusicStyle, mapper: (Song?) -> MusicStyle): LiveData<MusicStyle> {
         return MediatorLiveData(defaultValue).apply {
             addSource(this@mapWithDefault) {
                 postValue(mapper(it))
             }
+        }
+    }
+
+    private val handle = CoroutineExceptionHandler { coroutineContext, throwable ->
+        throwable.printStackTrace()
+        coroutineContext.cancel()
+    }
+
+    private fun getTracks(song: Song?): MutableLiveData<List<Track>>{
+        log(lyricsSource.name)
+
+        val tracks = MutableLiveData<List<Track>>(listOf())
+        if(song == null)    return tracks
+
+        viewModelScope.launch(handle + Dispatchers.IO) {
+            tracks.postValue(lyricsSource.search(song.apiTitle))
+        }
+
+        return tracks
+    }
+
+    private fun setLyrics(tracks: List<Track>){
+        trackIndex.value = 0
+        if(tracks.isEmpty())    return
+
+        viewModelScope.launch(handle + Dispatchers.IO) {
+            for((index, track) in tracks.withIndex()){
+                try {
+                    lyricsSource.getLyrics(track)
+                    trackIndex.postValue(index)
+                    break
+                }catch (e: Exception){ e.printStackTrace() }
+            }
+        }
+    }
+
+    private fun setLyrics(track: Track){
+        viewModelScope.launch(handle + Dispatchers.IO) {
+            lyric.postValue(lyricsSource.getLyrics(track))
         }
     }
 
@@ -47,6 +110,7 @@ object CurrentPlayer : ViewModel() {
 
     fun previous() {
         song.postValue(playList.value?.previous(song.value, navigation.value!!))
+        isPlaying.postValue(true)
     }
 
     fun pause() {

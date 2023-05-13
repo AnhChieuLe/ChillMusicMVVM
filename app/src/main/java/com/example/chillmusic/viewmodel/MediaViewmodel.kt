@@ -70,7 +70,6 @@ class MediaViewModel(application: Application) : AndroidViewModel(application) {
 
         songs.addSource(MediaStoreManager.allSong) {
             songs.postValue(it.toSortedSet(comparator))
-            log("Songs changed, size: ${it.size}")
         }
         songs.addSource(blackListRepo.blackList) { bl ->
             val value = songs.value
@@ -82,7 +81,6 @@ class MediaViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
             songs.postValue(value ?: sortedSetOf())
-            log("Blacklist changed, size: ${bl.size}")
         }
         songs.addSource(favoriteRepo.favorites) { fvs ->
             val value = songs.value
@@ -94,7 +92,6 @@ class MediaViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
             songs.postValue(value ?: sortedSetOf())
-            log("Favorite changed, size: ${fvs.size}")
         }
     }
 

@@ -1,23 +1,36 @@
-package com.example.chillmusic.api.model
+package com.example.chillmusic.network.api.model
 
+import com.example.chillmusic.network.crawl.model.Track
 import com.google.gson.annotations.SerializedName
 
-class Track(
+class TrackAPI(
     @SerializedName("track_id")
-    val id: Int,
+    val id: Int = 0,
     @SerializedName("track_name")
     val name: String,
     @SerializedName("album_id")
-    val albumId: Int,
+    val albumId: Int = 0,
     @SerializedName("album_name")
-    val albumName: String,
+    val albumName: String = "",
     @SerializedName("artist_id")
-    val artistId: Int,
+    val artistId: Int = 0,
     @SerializedName("artist_name")
-    val artistName: String,
+    val artistName: String = "",
     @SerializedName("has_lyrics")
-    val hasLyrics: Int,
+    val hasLyrics: Int = 0,
+    @SerializedName("track_share_url")
+    val url: String = "",
 ){
+    fun toTrack(): Track {
+        return Track(
+            id = id,
+            title = name,
+            artist = artistName,
+            album = albumName,
+            url = url
+        )
+    }
+
     override fun toString(): String {
         return  "name: $name " +
                 "album: $albumName " +
@@ -26,10 +39,10 @@ class Track(
     }
 
     override fun equals(other: Any?): Boolean {
-        val track = other as Track
-        return this.name == track.name
-                && this.albumId == track.albumId
-                && this.artistId == track.artistId
+        val trackAPI = other as TrackAPI
+        return this.name == trackAPI.name
+                && this.albumId == trackAPI.albumId
+                && this.artistId == trackAPI.artistId
     }
 
     override fun hashCode(): Int {

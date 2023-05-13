@@ -3,9 +3,12 @@ package com.example.chillmusic.viewmodel
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Paint
+import android.net.Uri
+import android.util.Size
 import android.view.View
 import android.widget.*
 import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
 import com.example.chillmusic.R
 import com.example.chillmusic.enums.Navigation
 import com.example.chillmusic.library.MusicStyle
@@ -17,6 +20,7 @@ import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.log
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
@@ -29,9 +33,9 @@ fun setText(textView: TextView, content: Int?) {
 
 @BindingAdapter("android:text")
 fun setText(textView: TextView, content: String?) {
-    if(content == null || content == "" || content == "<unknown>"){
+    if (content == null || content == "" || content == "<unknown>") {
         textView.setText(R.string.unknown)
-    }else{
+    } else {
         textView.text = content
     }
 }
@@ -100,10 +104,31 @@ fun setTabLayoutColor(tabLayout: TabLayout, style: MusicStyle?) {
 
 @BindingAdapter("android:bitmap")
 fun setImage(imageView: ImageView, bitmap: Bitmap?) {
-    if(bitmap != null)
+    if (bitmap != null)
         imageView.setImageBitmap(bitmap)
     else
         imageView.setImageResource(R.drawable.avatar)
+}
+
+@BindingAdapter("android:uri")
+fun setImage(imageView: ImageView, uri: Uri) {
+    val handler = CoroutineExceptionHandler { _, _ -> imageView.setImageResource(R.drawable.avatar) }
+    CoroutineScope(Dispatchers.IO + handler).launch(){
+        val resolver = imageView.context.contentResolver
+        val image = resolver.loadThumbnail(uri, Size(128, 128), null)
+        withContext(Dispatchers.Main){
+            imageView.setImageBitmap(image)
+        }
+    }
+}
+
+@BindingAdapter("android:url")
+fun setImageUrl(imageView: ImageView, url: String) {
+    Glide
+        .with(imageView)
+        .load(url)
+        .placeholder(R.drawable.avatar)
+        .into(imageView)
 }
 
 @BindingAdapter("android:style")
@@ -120,7 +145,7 @@ fun setProgressBarStyle(progressBar: ProgressBar, style: MusicStyle?) {
 }
 
 @BindingAdapter("android:style")
-fun setNavigationStyle(navigation: NavigationView, style: MusicStyle?){
+fun setNavigationStyle(navigation: NavigationView, style: MusicStyle?) {
     style ?: return
     navigation.itemIconTintList = style.stateList
     navigation.setBackgroundColor(style.backgroundColor)
@@ -128,7 +153,7 @@ fun setNavigationStyle(navigation: NavigationView, style: MusicStyle?){
 }
 
 @BindingAdapter("android:style")
-fun setNumberPickerStyle(numberPicker: NumberPicker, style: MusicStyle?){
+fun setNumberPickerStyle(numberPicker: NumberPicker, style: MusicStyle?) {
     style ?: return
     numberPicker.textColor = style.contentColor
 
@@ -142,21 +167,21 @@ fun setNumberPickerStyle(numberPicker: NumberPicker, style: MusicStyle?){
 }
 
 @BindingAdapter("android:max")
-fun setNumberPickerValue(numberPicker: NumberPicker, max: Int?){
+fun setNumberPickerValue(numberPicker: NumberPicker, max: Int?) {
     max ?: return
     numberPicker.minValue = 0
     numberPicker.maxValue = max
 }
 
 @BindingAdapter("android:color")
-fun setColor(bottomSheetDragHandleView: BottomSheetDragHandleView, style: MusicStyle?){
+fun setColor(bottomSheetDragHandleView: BottomSheetDragHandleView, style: MusicStyle?) {
     style ?: return
     bottomSheetDragHandleView.imageTintList = style.stateList
 }
 
 private fun getStringDuration(millisecond: Long?): String {
     millisecond ?: return ""
-    if(millisecond < 0) return ""
+    if (millisecond < 0) return ""
 
     val hh = TimeUnit.MILLISECONDS.toHours(millisecond)
     val mm = TimeUnit.MILLISECONDS.toMinutes(millisecond) % 60

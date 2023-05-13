@@ -28,27 +28,25 @@
             app:showAsAction="ifRoom"
             android:checkable="true"/>
     </group>
-    <item android:title="@string/custom">
-        <menu>
-            <item
-                android:id="@+id/navigation_setting"
-                android:title="@string/setting"
-                android:icon="@drawable/setting"
-                app:showAsAction="ifRoom"
-                android:checkable="false"/>
-            <item
-                android:id="@+id/navigation_support"
-                android:title="@string/help"
-                android:icon="@drawable/help"
-                app:showAsAction="ifRoom"
-                android:checkable="false"/>
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/navigation_setting"
+            android:title="@string/setting"
+            android:icon="@drawable/setting"
+            app:showAsAction="ifRoom"
+            android:checkable="false"/>
+        <item
+            android:id="@+id/navigation_support"
+            android:title="@string/help"
+            android:icon="@drawable/help"
+            app:showAsAction="ifRoom"
+            android:checkable="false"/>
 
-            <item
-                android:id="@+id/navigation_premium"
-                android:title="@string/premium"
-                android:icon="@drawable/premium"
-                app:showAsAction="ifRoom"
-                android:checkable="false"/>
-        </menu>
-    </item>
+        <item
+            android:id="@+id/navigation_premium"
+            android:title="@string/premium"
+            android:icon="@drawable/premium"
+            app:showAsAction="ifRoom"
+            android:checkable="false"/>
+    </group>
 </menu>

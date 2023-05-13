@@ -10,8 +10,10 @@ import android.provider.MediaStore
 import android.util.Size
 import androidx.lifecycle.MutableLiveData
 import androidx.room.PrimaryKey
+import com.example.chillmusic.constant.log
 import com.example.chillmusic.data.favorite.Favorite
 import java.io.File
+import java.io.IOException
 
 data class Song(
     @PrimaryKey
@@ -40,10 +42,12 @@ data class Song(
         )
 
     var liveAlbumArt: MutableLiveData<Bitmap> = MutableLiveData()
-    fun loadAlbumArt(contentResolver: ContentResolver) {
+    suspend fun loadAlbumArt(contentResolver: ContentResolver) {
         val image = contentResolver.loadThumbnail(uri, Size(128, 128), null)
         liveAlbumArt.postValue(image)
     }
+
+    val apiTitle get() = title.substringBefore("-").substringAfter("(").substringBefore(")").trim()
 
     val largeAlbumArt: Bitmap?
         get() {
@@ -92,10 +96,7 @@ data class Song(
         writer = metadata.extractMetadata(WRITER).toString()
     }
 
-    fun toDataBase(): Favorite {
-        return Favorite(id)
-    }
-
+    fun toDataBase() = Favorite(id)
     override fun equals(other: Any?) = (other as Song?)?.id == id
     override fun hashCode() = id.hashCode()
 }

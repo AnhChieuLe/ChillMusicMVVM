@@ -1,6 +1,7 @@
 package com.example.chillmusic.activity
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat
@@ -22,11 +23,13 @@ import com.example.chillmusic.enums.Sort
 import com.example.chillmusic.enums.SortType
 import com.example.chillmusic.library.MusicStyle.Companion.getDarkness
 import com.example.chillmusic.repository.MediaViewModel
+import com.example.chillmusic.settings.Settings
 import com.example.chillmusic.viewmodel.CurrentPlayer
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: CurrentPlayer by viewModels()
+    private val settings: Settings by lazy { Settings(application) }
     private val navController by lazy {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_main_host) as NavHostFragment
         navHostFragment.navController
@@ -38,12 +41,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        settings.register()
         binding = ActivityMainBinding.inflate(layoutInflater)
         binding.lifecycleOwner = this
         binding.currentPlayer = viewModel
         setContentView(binding.root)
         observer()
         setEvent()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        settings.unRegister()
     }
 
     private fun observer() {
@@ -53,6 +62,14 @@ class MainActivity : AppCompatActivity() {
             window.statusBarColor = it.backgroundColor
             wic.isAppearanceLightStatusBars = !it.isDarkBackGround
             wic.isAppearanceLightNavigationBars = !it.isDarkBackGround
+        }
+
+        settings.liveVolume.observe(this){
+            viewModel.volume.postValue(it)
+        }
+
+        settings.liveSource.observe(this){
+            viewModel.lyricsSource = it
         }
     }
 

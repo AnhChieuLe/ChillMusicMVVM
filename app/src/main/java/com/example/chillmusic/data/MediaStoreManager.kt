@@ -22,7 +22,7 @@ import java.util.SortedSet
 object MediaStoreManager {
     val allSong = MutableLiveData<Set<Song>>(setOf())
     val songs get() = allSong.value?.toList() ?: listOf()
-    val albums: List<Album>
+    private val albums: List<Album>
         get() = songs.groupBy { it.albumId }.map {
             Album(
                 id = it.key,
@@ -31,6 +31,13 @@ object MediaStoreManager {
                 albumArt = it.value[0].liveAlbumArt
             )
         }
+
+    suspend fun ScanMedia(application: Application){
+        val paths = arrayOf("/storage/emulated/0/")
+        MediaScannerConnection.scanFile(application, paths, null) { path, uri ->
+            loadData(application.contentResolver)
+        }
+    }
 
     fun loadData(resolver: ContentResolver) {
         val projection = arrayOf(
@@ -48,9 +55,12 @@ object MediaStoreManager {
 
         val collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
         val sortOrder = "${MediaStore.Video.Media.DATE_ADDED} ASC"
-
         val query = resolver.query(collection, projection, null, null, sortOrder) ?: return
-        val scope = CoroutineScope(Dispatchers.Default)
+
+        val scope = CoroutineScope(Dispatchers.IO)
+        val handler = CoroutineExceptionHandler { _, exception ->
+            exception.printStackTrace()
+        }
 
         query.use { cursor ->
             val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
@@ -69,9 +79,9 @@ object MediaStoreManager {
                 val id = cursor.getLong(idColumn)
                 val path = cursor.getString(pathColumn) ?: continue
                 val title = cursor.getString(titleColumn) ?: continue
-                val artist = cursor.getString(artistColumn) ?: ""
+                val artist = cursor.getString(artistColumn).check() ?: ""
                 val artistId = cursor.getLong(artistIdColumn)
-                val albumName = cursor.getString(albumColumn) ?: ""
+                val albumName = cursor.getString(albumColumn).check() ?: ""
                 val albumId = cursor.getLong(albumIdColumn)
                 val duration = cursor.getInt(durationColumn)
                 if (duration < 60000) continue
@@ -89,23 +99,13 @@ object MediaStoreManager {
                     date = date,
                     bitrate = 0L,
                 )
-                val handler = CoroutineExceptionHandler { _, exception ->
-                    exception.printStackTrace()
-                }
-                scope.launch(Dispatchers.IO + handler) {
+                scope.launch(handler) {
                     song.loadAlbumArt(resolver)
                 }
                 list.add(song)
             }
 
             allSong.postValue(list)
-        }
-    }
-
-    fun refreshMediaStore(application: Application, callback: () -> Unit) {
-        val paths = arrayOf("/storage/emulated/0/")
-        MediaScannerConnection.scanFile(application, paths, null) { path, uri ->
-            callback()
         }
     }
 
@@ -134,4 +134,10 @@ object MediaStoreManager {
         value.add(values)
         this.postValue(value)
     }
+
+    private fun String?.check(): String?{
+        return if(this == "<unknown>") ""
+        else this
+    }
 }
+

@@ -4,7 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
-import com.example.chillmusic.api.model.Track
+import com.example.chillmusic.network.api.model.TrackAPI
+import com.example.chillmusic.network.crawl.model.Track
 import com.example.chillmusic.databinding.ItemTrackBinding
 import com.example.chillmusic.viewmodel.CurrentPlayer
 
@@ -19,23 +20,13 @@ class TrackAdapter(val currentPlayer: CurrentPlayer) : LifecycleAdapter<TrackAda
         result.dispatchUpdatesTo(this)
     }
 
-    var onSelect: (Track) -> Unit = {}
-
-    fun setDefaultSelected() {
-        if (tracks.isNotEmpty()) {
-            clearSelected()
-            tracks[0].isSelected.value = true
+    fun setSelected(position: Int){
+        for ((index, track) in tracks.withIndex()){
+            track.isSelected.postValue(index == position)
         }
     }
 
-    fun setSelected(id: Int) {
-        clearSelected()
-        tracks.forEach { if (id == it.track.id) it.isSelected.value = true }
-    }
-
-    private fun clearSelected() {
-        tracks.forEach { it.isSelected.value = false }
-    }
+    var onSelect: (track: Track, index: Int) -> Unit = { _, _ ->  }
 
     class ViewHolder(val binding: ItemTrackBinding) : LifecycleViewHolder(binding.root) {
         fun bind(track: SelectableTrack, currentPlayer: CurrentPlayer) {
@@ -55,9 +46,13 @@ class TrackAdapter(val currentPlayer: CurrentPlayer) : LifecycleAdapter<TrackAda
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(tracks[position], currentPlayer)
         holder.binding.root.setOnClickListener {
-            tracks.forEach { it.isSelected.postValue(false) }
-            tracks[position].isSelected.postValue(true)
-            onSelect(tracks[position].track)
+            tracks.forEachIndexed { index, track ->
+                if(index == position)
+                    track.isSelected.postValue(true)
+                else
+                    track.isSelected.postValue(false)
+            }
+            onSelect(tracks[position].track, position)
         }
     }
 
@@ -70,7 +65,7 @@ class TrackAdapter(val currentPlayer: CurrentPlayer) : LifecycleAdapter<TrackAda
         override fun getNewListSize() = newList.size
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldList[oldItemPosition].id == newList[newItemPosition].id
+            return oldList[oldItemPosition] == newList[newItemPosition]
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

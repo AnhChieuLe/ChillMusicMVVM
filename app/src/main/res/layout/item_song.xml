@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
+
         <variable
             name="currentPlayerViewModel"
-            type="com.example.chillmusic.viewmodel.CurrentPlayer"/>
+            type="com.example.chillmusic.viewmodel.CurrentPlayer" />
+
         <variable
             name="song"
             type="com.example.chillmusic.model.Song" />
@@ -14,36 +16,37 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="3dp"
         android:background="@drawable/rounded_item"
-        android:backgroundTint="@{currentPlayerViewModel.style.itemBackGround}"
-        android:layout_marginVertical="3dp">
+        android:backgroundTint="@{currentPlayerViewModel.style.itemBackGround}">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/album_art"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:shapeAppearanceOverlay="@style/roundedImageView"
+            android:layout_margin="6dp"
             android:bitmap="@{song.liveAlbumArt}"
             android:contentDescription="@{currentPlayerViewModel.song.title}"
             android:scaleType="centerCrop"
-            android:layout_margin="6dp"
-            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/roundedImageView" />
+        <!--        android:uri="@{song.uri}"-->
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:maxLines="1"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="6dp"
             android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{song.title}"
             android:textColor="@{song.equals(currentPlayerViewModel.song) ? currentPlayerViewModel.style.contentColor : currentPlayerViewModel.style.titleColor}"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="6dp"
             app:layout_constraintEnd_toStartOf="@+id/img_more"
             app:layout_constraintStart_toEndOf="@id/album_art"
             app:layout_constraintTop_toTopOf="parent" />
@@ -52,12 +55,12 @@
             android:id="@+id/tv_artist"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:maxLines="1"
+            android:layout_marginStart="12dp"
             android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{song.artist}"
             android:textColor="@{song.equals(currentPlayerViewModel.song) ? currentPlayerViewModel.style.contentColor : currentPlayerViewModel.style.titleColor}"
             android:textSize="11sp"
-            android:layout_marginStart="12dp"
             app:layout_constraintEnd_toStartOf="@+id/img_more"
             app:layout_constraintStart_toEndOf="@id/album_art"
             app:layout_constraintTop_toBottomOf="@+id/tv_title" />
@@ -66,28 +69,28 @@
             android:id="@+id/tv_album"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:maxLines="1"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="6dp"
             android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{song.album}"
             android:textColor="@{song.equals(currentPlayerViewModel.song) ? currentPlayerViewModel.style.contentColor : currentPlayerViewModel.style.titleColor}"
             android:textSize="11sp"
-            android:layout_marginStart="12dp"
-            android:layout_marginBottom="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/img_more"
             app:layout_constraintStart_toEndOf="@id/album_art"
-            app:layout_constraintTop_toBottomOf="@+id/tv_artist"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/tv_artist" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_more"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:scaleType="centerInside"
             android:alpha="0.5"
+            android:scaleType="centerInside"
             android:src="@drawable/more"
             android:tint="@{song.equals(currentPlayerViewModel.song)? currentPlayerViewModel.style.contentColor : currentPlayerViewModel.style.titleColor}"
-            app:layout_constraintDimensionRatio="H, 1.25:1"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="H, 1.25:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

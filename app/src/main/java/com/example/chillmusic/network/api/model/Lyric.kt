@@ -1,4 +1,4 @@
-package com.example.chillmusic.api.model
+package com.example.chillmusic.network.api.model
 
 import com.google.gson.annotations.SerializedName
 

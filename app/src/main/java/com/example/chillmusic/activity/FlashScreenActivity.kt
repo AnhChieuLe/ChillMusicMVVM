@@ -14,15 +14,21 @@ import com.example.chillmusic.constant.log
 import com.example.chillmusic.data.MediaStoreManager
 import com.example.chillmusic.library.MusicStyle
 import com.example.chillmusic.model.Song
+import com.example.chillmusic.settings.Settings
 import com.example.chillmusic.viewmodel.CurrentPlayer
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 
 class FlashScreenActivity : AppCompatActivity() {
+    private val settings: Settings by lazy { Settings(application) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         CurrentPlayer.defaultStyle = MusicStyle(BitmapFactory.decodeResource(resources, R.drawable.avatar))
+        CurrentPlayer.lyricsSource = settings.source
         requestPermission {
             refreshMediaStore {
                 MediaStoreManager.loadData(application.contentResolver)

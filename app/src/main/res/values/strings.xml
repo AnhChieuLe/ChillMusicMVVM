@@ -35,4 +35,16 @@
     <string name="cancel">Hủy</string>
     <string name="delete">Xóa</string>
     <string name="favorite">Yêu thích</string>
+
+    <string-array name="lyrics_source_entries">
+        <item>MusixMatch Crawl</item>
+        <item>MusixMatch API</item>
+        <item>Nhạc Của Tui</item>
+    </string-array>
+
+    <string-array name="lyrics_source_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 </resources>

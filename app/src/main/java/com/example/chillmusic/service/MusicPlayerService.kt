@@ -45,18 +45,16 @@ class MusicPlayerService : LifecycleService() {
         }
 
         fun pause(){
+            if(!mediaPlayer.isPlaying) return
             mediaPlayer.pause()
             sendNotification()
         }
 
         fun play(){
+            if(mediaPlayer.isPlaying) return
             audioFocus.requestFocus(settings.autoPause)
             mediaPlayer.start()
             sendNotification()
-        }
-
-        fun clear(){
-            stopSelf()
         }
 
         override fun onPause() {
@@ -151,8 +149,8 @@ class MusicPlayerService : LifecycleService() {
         }
 
         CurrentPlayer.song.observe(this) {
-            if (it != null) mediaCallback.start()
-            else mediaCallback.clear()
+            if(it == null) stopSelf()
+            else mediaCallback.start()
         }
     }
 

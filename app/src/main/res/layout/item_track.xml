@@ -13,45 +13,60 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:paddingVertical="8dp"
-        android:paddingHorizontal="16dp"
+        android:paddingHorizontal="8dp"
         android:background="@drawable/rounded_item"
         android:backgroundTint="@{currentPlayer.style.itemBackGround}">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/album_art"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:url="@{track.track.albumArtUrl}"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintDimensionRatio="H, 1:1"
+            app:shapeAppearanceOverlay="@style/roundedImageView"/>
+
         <TextView
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{track.track.name}"
+            android:text="@{track.track.title}"
             android:textColor="@{track.selected ? currentPlayer.style.contentColor : currentPlayer.style.titleColor}"
             android:textSize="18sp"
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@id/album_art"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
         <TextView
             android:id="@+id/artist"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{track.track.artistName}"
+            android:text="@{track.track.artist}"
             android:textColor="@{track.selected ? currentPlayer.style.contentColor : currentPlayer.style.titleColor}"
             android:textSize="14sp"
             android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@id/album_art"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name"/>
-        <TextView
-            android:id="@+id/album"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@{track.track.albumName}"
-            android:textColor="@{track.selected ? currentPlayer.style.contentColor : currentPlayer.style.titleColor}"
-            android:textSize="14sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/artist"/>
+<!--        <TextView-->
+<!--            android:id="@+id/album"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@{track.track.album}"-->
+<!--            android:textColor="@{track.selected ? currentPlayer.style.contentColor : currentPlayer.style.titleColor}"-->
+<!--            android:textSize="14sp"-->
+<!--            android:maxLines="1"-->
+<!--            android:ellipsize="end"-->
+<!--            app:layout_constraintStart_toEndOf="@id/album_art"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/artist"/>-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

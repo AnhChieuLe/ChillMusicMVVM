@@ -14,5 +14,12 @@
             app:showSeekBarValue="true"
             app:summary="Tùy chỉnh âm lượng không ảnh hưởng tới âm lượng hệ thống"
             app:title="Âm lượng" />
+        <ListPreference
+            app:title="Nguồn lời bài hát"
+            app:key="lyrics_source"
+            app:entries="@array/lyrics_source_entries"
+            app:entryValues="@array/lyrics_source_values"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="0" />
     </PreferenceCategory>
 </PreferenceScreen>
